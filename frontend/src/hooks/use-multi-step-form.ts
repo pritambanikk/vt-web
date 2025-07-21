@@ -1,0 +1,158 @@
+import { useState, useCallback, useRef } from 'react';
+import { LeadFormData } from '@/types/lead-form';
+
+const STORAGE_KEY = 'lead-form-data';
+
+// Helper function to safely serialize data for localStorage
+const safeStringify = (obj: Record<string, unknown>): string => {
+  try {
+    // Filter out non-serializable properties
+    const cleanObj = Object.keys(obj).reduce((acc, key) => {
+      const value = obj[key];
+      // Only include primitive values, plain objects, and arrays
+      if (
+        value === null ||
+        value === undefined ||
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        typeof value === 'boolean' ||
+        (typeof value === 'object' && !(value instanceof Element) && !(value instanceof Event))
+      ) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {} as Record<string, unknown>);
+    
+    return JSON.stringify(cleanObj);
+  } catch (error) {
+    console.warn('Failed to serialize form data:', error);
+    return '{}';
+  }
+};
+
+export const useMultiStepForm = () => {
+  const [currentStep, setCurrentStep] = useState(1);
+  const isUpdatingRef = useRef(false);
+  const [formData, setFormData] = useState<Partial<LeadFormData>>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          return { ...parsed, step: parsed.step || 1 };
+        } catch {
+          return { step: 1 };
+        }
+      }
+    }
+    return { step: 1 };
+  });
+
+  const updateFormData = useCallback((data: Partial<LeadFormData>) => {
+    if (isUpdatingRef.current) return;
+    
+    isUpdatingRef.current = true;
+    
+    // Ensure we only store serializable data
+    const cleanData = Object.keys(data).reduce((acc, key) => {
+      const value = data[key as keyof typeof data];
+      if (
+        value === null ||
+        value === undefined ||
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        typeof value === 'boolean' ||
+        (typeof value === 'object' && !(value instanceof Element) && !(value instanceof Event))
+      ) {
+        (acc as Record<string, unknown>)[key] = value;
+      }
+      return acc;
+    }, {} as Partial<LeadFormData>);
+    
+    const newData = { ...formData, ...cleanData };
+    setFormData(newData);
+    
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(STORAGE_KEY, safeStringify(newData));
+      } catch (error) {
+        console.warn('Failed to save form data to localStorage:', error);
+      }
+    }
+    
+    // Reset the flag after a short delay
+    setTimeout(() => {
+      isUpdatingRef.current = false;
+    }, 0);
+  }, [formData]);
+
+  const nextStep = useCallback(() => {
+    if (currentStep < 3) {
+      const newStep = currentStep + 1;
+      setCurrentStep(newStep);
+      updateFormData({ step: newStep });
+    }
+  }, [currentStep, updateFormData]);
+
+  const prevStep = useCallback(() => {
+    if (currentStep > 1) {
+      const newStep = currentStep - 1;
+      setCurrentStep(newStep);
+      updateFormData({ step: newStep });
+    }
+  }, [currentStep, updateFormData]);
+
+  const goToStep = useCallback((step: number) => {
+    if (step >= 1 && step <= 3) {
+      setCurrentStep(step);
+      updateFormData({ step });
+    }
+  }, [updateFormData]);
+
+  const resetForm = useCallback(() => {
+    setFormData({ step: 1 });
+    setCurrentStep(1);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, []);
+
+  const isStepComplete = useCallback((step: number) => {
+    switch (step) {
+      case 1:
+        // Check if all required fields are filled and valid
+        const hasName = formData.name && formData.name.length >= 2;
+        const hasLocation = formData.location && formData.location.length >= 3;
+        // More flexible WhatsApp validation - accepts 10 digits starting with 6-9, with or without +91/91 prefix
+        const hasWhatsApp = formData.whatsappNumber && (() => {
+          const cleanNumber = formData.whatsappNumber!.replace(/\s/g, '');
+          return /^[6-9]\d{9}$/.test(cleanNumber) || // 10 digits starting with 6-9
+                 /^(\+91|91)[6-9]\d{9}$/.test(cleanNumber); // with +91 or 91 prefix
+        })();
+        const hasConsent = formData.whatsappConsent === true;
+        
+        return hasName && hasLocation && hasWhatsApp && hasConsent;
+      case 2:
+        return !!formData.service;
+      case 3:
+        // For Step 3, we don't require payment choice to be selected
+        // The user can choose either option or use the footer buttons directly
+        return true;
+      default:
+        return false;
+    }
+  }, [formData]);
+
+  return {
+    currentStep,
+    formData,
+    updateFormData,
+    nextStep,
+    prevStep,
+    goToStep,
+    resetForm,
+    isStepComplete,
+    canGoNext: isStepComplete(currentStep),
+    canGoPrev: currentStep > 1,
+  };
+}; 
