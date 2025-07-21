@@ -1,20 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { useForm } from "@/contexts/form-context";
 import { WordRotate } from "@/components/ui/word-rotate";
+import { useFormContext } from "@/contexts/form-context";
 
-interface HeroSectionProps {
-  onOpenForm?: () => void;
-}
-
-export function HeroSection({ onOpenForm }: HeroSectionProps) {
-  const { openForm } = useForm();
+export function HeroSection() {
+  const { openForm } = useFormContext();
   
   const handleGetStarted = () => {
-    if (onOpenForm) {
-      onOpenForm();
-    } else {
-      openForm('consultation');
-    }
+    openForm('consultation');
   };
 
   const handleSeeServices = () => {

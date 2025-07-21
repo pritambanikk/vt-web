@@ -33,20 +33,7 @@ const safeStringify = (obj: Record<string, unknown>): string => {
 export const useMultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const isUpdatingRef = useRef(false);
-  const [formData, setFormData] = useState<Partial<LeadFormData>>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          return { ...parsed, step: parsed.step || 1 };
-        } catch {
-          return { step: 1 };
-        }
-      }
-    }
-    return { step: 1 };
-  });
+  const [formData, setFormData] = useState<Partial<LeadFormData>>({ step: 1 });
 
   const updateFormData = useCallback((data: Partial<LeadFormData>) => {
     if (isUpdatingRef.current) return;
@@ -72,13 +59,7 @@ export const useMultiStepForm = () => {
     const newData = { ...formData, ...cleanData };
     setFormData(newData);
     
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem(STORAGE_KEY, safeStringify(newData));
-      } catch (error) {
-        console.warn('Failed to save form data to localStorage:', error);
-      }
-    }
+    // No localStorage persistence
     
     // Reset the flag after a short delay
     setTimeout(() => {
@@ -87,34 +68,27 @@ export const useMultiStepForm = () => {
   }, [formData]);
 
   const nextStep = useCallback(() => {
-    if (currentStep < 3) {
-      const newStep = currentStep + 1;
-      setCurrentStep(newStep);
-      updateFormData({ step: newStep });
+    if (currentStep < 4) {
+      setCurrentStep(currentStep + 1);
     }
-  }, [currentStep, updateFormData]);
+  }, [currentStep]);
 
   const prevStep = useCallback(() => {
     if (currentStep > 1) {
-      const newStep = currentStep - 1;
-      setCurrentStep(newStep);
-      updateFormData({ step: newStep });
+      setCurrentStep(currentStep - 1);
     }
-  }, [currentStep, updateFormData]);
+  }, [currentStep]);
 
   const goToStep = useCallback((step: number) => {
-    if (step >= 1 && step <= 3) {
+    if (step >= 1 && step <= 4) {
       setCurrentStep(step);
-      updateFormData({ step });
     }
-  }, [updateFormData]);
+  }, []);
 
   const resetForm = useCallback(() => {
     setFormData({ step: 1 });
     setCurrentStep(1);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem(STORAGE_KEY);
-    }
+    // No localStorage persistence
   }, []);
 
   const isStepComplete = useCallback((step: number) => {
@@ -135,8 +109,10 @@ export const useMultiStepForm = () => {
       case 2:
         return !!formData.service;
       case 3:
-        // For Step 3, we don't require payment choice to be selected
-        // The user can choose either option or use the footer buttons directly
+        // Step 3: Review step, always complete
+        return true;
+      case 4:
+        // Step 4: WhatsNextStep, always complete
         return true;
       default:
         return false;

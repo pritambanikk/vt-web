@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useForm } from "@/contexts/form-context";
+import { useFormContext } from "@/contexts/form-context";
 import { SimpleProcess } from "../homepage/simple-process";
 
 export function ConsultationLanding() {
-  const { openForm } = useForm();
+  const { openForm } = useFormContext();
   
   const features = [
     {

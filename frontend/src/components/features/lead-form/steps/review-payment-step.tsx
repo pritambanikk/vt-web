@@ -1,18 +1,15 @@
 "use client"
 
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { paymentChoiceSchema, PaymentChoiceFormData } from '@/lib/validators/lead-form';
 import { formElementVariants, staggerContainer } from '@/lib/animations';
 import { LeadFormData } from '@/types/lead-form';
-import { Clock, Shield, Zap, Star } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 
 interface ReviewPaymentStepProps {
-  formData: LeadFormData;
-  initialData?: Partial<PaymentChoiceFormData>;
+  formData: Partial<LeadFormData>;
+  onEditPersonalDetails?: () => void;
 }
 
 const servicePrices = {
@@ -22,46 +19,16 @@ const servicePrices = {
   'corporate-retainer': '₹9,999',
 };
 
-const benefits = [
-  {
-    icon: Zap,
-    title: 'Priority Service',
-    description: 'Get your case handled first',
-    color: 'text-blue-600'
-  },
-  {
-    icon: Clock,
-    title: 'Faster Response',
-    description: '24-hour initial response',
-    color: 'text-green-600'
-  },
-  {
-    icon: Shield,
-    title: 'Secure Payment',
-    description: 'Bank-grade security',
-    color: 'text-purple-600'
-  },
-  {
-    icon: Star,
-    title: 'Premium Support',
-    description: 'Dedicated legal expert',
-    color: 'text-orange-600'
-  }
-];
-
 export const ReviewPaymentStep = ({ 
   formData, 
-  initialData
+  onEditPersonalDetails
 }: ReviewPaymentStepProps) => {
-  const {
-    formState: { errors },
-  } = useForm<PaymentChoiceFormData>({
-    resolver: zodResolver(paymentChoiceSchema),
-    defaultValues: initialData,
-    mode: 'onChange',
-  });
-
-
+  // Fallbacks for required fields
+  const name = formData.name || '';
+  const location = formData.location || '';
+  const whatsappNumber = formData.whatsappNumber || '';
+  const service = formData.service || '';
+  const serviceDetails = formData.serviceDetails || '';
 
   return (
     <motion.div
@@ -70,89 +37,52 @@ export const ReviewPaymentStep = ({
       animate="visible"
       className="space-y-4"
     >
-      {/* Top Row: Review + Benefits Side by Side */}
-      <div className="grid gap-4 lg:grid-cols-2">
-        {/* Review Section - Compact */}
-        <motion.div variants={formElementVariants}>
-          <Card className="h-full">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Review Your Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="space-y-2">
+      {/* Review Section */}
+      <motion.div variants={formElementVariants}>
+        <Card className="h-full">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Review Your Information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
                 <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wide">Personal Details</h4>
-                <div className="space-y-1">
-                  <p className="text-sm"><span className="font-medium">Name:</span> {formData.name}</p>
-                  <p className="text-sm"><span className="font-medium">Location:</span> {formData.location}</p>
-                  <p className="text-sm"><span className="font-medium">WhatsApp:</span> {formData.whatsappNumber}</p>
-                </div>
+                {onEditPersonalDetails && (
+                  <button
+                    type="button"
+                    onClick={onEditPersonalDetails}
+                    aria-label="Edit personal details"
+                    className="ml-2 p-1 rounded hover:bg-muted/30 focus:outline-none focus:ring"
+                  >
+                    <Pencil className="w-4 h-4 text-primary" />
+                  </button>
+                )}
               </div>
-              <div className="space-y-2">
-                <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wide">Service Details</h4>
-                <div className="space-y-1">
+              <div className="space-y-1">
+                <p className="text-sm"><span className="font-medium">Name:</span> {name}</p>
+                <p className="text-sm"><span className="font-medium">Location:</span> {location}</p>
+                <p className="text-sm"><span className="font-medium">WhatsApp:</span> {whatsappNumber}</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wide">Service Details</h4>
+              <div className="space-y-1">
+                <p className="text-sm">
+                  <span className="font-medium">Service:</span> {service ? service.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()) : ''}
+                </p>
+                <p className="text-sm">
+                  <span className="font-medium">Price:</span> {servicePrices[service as keyof typeof servicePrices] || ''}
+                </p>
+                {serviceDetails && (
                   <p className="text-sm">
-                    <span className="font-medium">Service:</span> {formData.service?.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    <span className="font-medium">Details:</span> {serviceDetails}
                   </p>
-                  <p className="text-sm">
-                    <span className="font-medium">Price:</span> {servicePrices[formData.service as keyof typeof servicePrices]}
-                  </p>
-                  {formData.serviceDetails && (
-                    <p className="text-sm">
-                      <span className="font-medium">Details:</span> {formData.serviceDetails}
-                    </p>
-                  )}
-                </div>
+                )}
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Benefits Section - Compact */}
-        <motion.div variants={formElementVariants}>
-          <Card className="h-full">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Why Pay Upfront?</CardTitle>
-              <p className="text-xs text-muted-foreground">Get premium benefits with advance payment</p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-2">
-                {benefits.map((benefit, index) => {
-                  const IconComponent = benefit.icon;
-                  return (
-                    <motion.div
-                      key={benefit.title}
-                      variants={formElementVariants}
-                      initial="hidden"
-                      animate="visible"
-                      transition={{ delay: index * 0.1 }}
-                      className="text-center p-2 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
-                    >
-                      <div className="flex justify-center mb-1">
-                        <IconComponent className={`w-4 h-4 ${benefit.color}`} />
-                      </div>
-                      <h4 className="text-xs font-medium mb-1">{benefit.title}</h4>
-                      <p className="text-xs text-muted-foreground leading-tight">{benefit.description}</p>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-
-
-
-      {errors.paymentChoice && (
-        <motion.p
-          className="text-sm text-destructive"
-          variants={formElementVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {errors.paymentChoice.message}
-        </motion.p>
-      )}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </motion.div>
   );
 }; 

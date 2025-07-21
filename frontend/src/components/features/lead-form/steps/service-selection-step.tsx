@@ -68,17 +68,6 @@ export const ServiceSelectionStep = ({ initialData, onNext, onDataUpdate }: Serv
     onDataUpdate?.({ service: value as ServiceSelectionFormData['service'] });
   };
 
-  // Auto-advance to next step if service is pre-selected and form is valid
-  useEffect(() => {
-    if (selectedService && !errors.service) {
-      // Small delay to ensure the form state is updated
-      const timer = setTimeout(() => {
-        onNext({ service: selectedService, serviceDetails: watch('serviceDetails') || '' });
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [selectedService, errors.service, onNext, watch]);
-
   return (
     <motion.div
       variants={staggerContainer}
@@ -148,6 +137,8 @@ export const ServiceSelectionStep = ({ initialData, onNext, onDataUpdate }: Serv
           )}
         </motion.div>
 
+        {/* Hidden submit button for form validation */}
+        <button type="submit" style={{ display: 'none' }} />
 
       </form>
     </motion.div>

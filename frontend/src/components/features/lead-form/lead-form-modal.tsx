@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,67 +10,20 @@ import {
 } from '@/components/ui/dialog';
 import { MultiStepForm } from './multi-step-form';
 import { ProgressIndicator } from './progress-indicator';
-import { useLeadFormModal } from '@/hooks/use-lead-form-modal';
-import { LeadFormData } from '@/types/lead-form';
+import { useFormContext } from '@/contexts/form-context';
+import { Loader2 } from 'lucide-react';
 
-interface LeadFormModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onComplete?: (data: LeadFormData) => void;
-  initialService?: string;
-}
-
-export const LeadFormModal = ({ isOpen, onClose, onComplete, initialService }: LeadFormModalProps) => {
-  const { handleEscapeKey } = useLeadFormModal();
-  const [currentStep, setCurrentStep] = useState(1);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [canProceed, setCanProceed] = useState(false);
-  const [shouldProceed, setShouldProceed] = useState(false);
-  const [shouldGoBack, setShouldGoBack] = useState(false);
-  const [shouldSubmitAndPay, setShouldSubmitAndPay] = useState(false);
-  const [shouldSubmitTicket, setShouldSubmitTicket] = useState(false);
-
-  // Handle escape key
-  useEffect(() => {
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscapeKey);
-      return () => document.removeEventListener('keydown', handleEscapeKey);
-    }
-  }, [isOpen, handleEscapeKey]);
-
-  const handleComplete = (data: LeadFormData) => {
-    console.log('Form completed:', data);
-    onComplete?.(data);
-    onClose();
-  };
-
-  const handleStepChange = (step: number, canProceed: boolean) => {
-    setCurrentStep(step);
-    setCanProceed(canProceed);
-  };
-
-  const handleContinue = () => {
-    setShouldProceed(true);
-    setTimeout(() => setShouldProceed(false), 100);
-  };
-
-  const handleBack = () => {
-    setShouldGoBack(true);
-    setTimeout(() => setShouldGoBack(false), 100);
-  };
-
-  const handleSubmitAndPay = () => {
-    setShouldSubmitAndPay(true);
-    setTimeout(() => setShouldSubmitAndPay(false), 100);
-  };
-
-  const handleSubmitTicket = () => {
-    setShouldSubmitTicket(true);
-    setTimeout(() => setShouldSubmitTicket(false), 100);
-  };
-
-
+export const LeadFormModal = () => {
+  const { 
+    currentStep, 
+    nextStep, 
+    prevStep, 
+    isFormOpen, 
+    closeForm, 
+    isSubmitting, 
+    submitForm, 
+    submissionError 
+  } = useFormContext();
 
   const getStepTitle = () => {
     switch (currentStep) {
@@ -80,7 +32,9 @@ export const LeadFormModal = ({ isOpen, onClose, onComplete, initialService }: L
       case 2:
         return 'Service Selection';
       case 3:
-        return 'Review & Payment';
+        return 'Review & Submit';
+      case 4:
+        return "What's Next";
       default:
         return 'Get Legal Help';
     }
@@ -93,7 +47,9 @@ export const LeadFormModal = ({ isOpen, onClose, onComplete, initialService }: L
       case 2:
         return 'Choose the legal service you need';
       case 3:
-        return 'Review your information and choose your payment option';
+        return 'Review your information and submit your ticket';
+      case 4:
+        return 'Your ticket is submitted! Next steps below.';
       default:
         return '';
     }
@@ -102,24 +58,25 @@ export const LeadFormModal = ({ isOpen, onClose, onComplete, initialService }: L
   const steps = [
     { id: 1, title: 'Personal Details', description: 'Basic information' },
     { id: 2, title: 'Service Selection', description: 'Choose service' },
-    { id: 3, title: 'Review & Payment', description: 'Final step' },
+    { id: 3, title: 'Review & Submit', description: 'Final review' },
+    { id: 4, title: "What's Next", description: 'Next steps' },
   ];
 
   return (
     <AnimatePresence>
-      {isOpen && (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-0">
+      {isFormOpen && (
+        <Dialog open={isFormOpen} onOpenChange={closeForm}>
+          <DialogContent className="w-[95vw] max-w-4xl h-[95svh] max-h-[95svh] flex flex-col p-0 mx-auto">
             {/* Fixed Header */}
-            <DialogHeader className="px-6 py-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <DialogTitle className="text-xl font-semibold">
+            <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
+              <DialogTitle className="text-lg sm:text-xl font-semibold">
                 {getStepTitle()}
               </DialogTitle>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 {getStepDescription()}
               </p>
               {/* Progress Indicator */}
-              <div className="mt-4">
+              <div className="mt-3 sm:mt-4">
                 <ProgressIndicator
                   currentStep={currentStep}
                   totalSteps={steps.length}
@@ -129,61 +86,59 @@ export const LeadFormModal = ({ isOpen, onClose, onComplete, initialService }: L
             </DialogHeader>
             
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto px-6 py-6">
-              <MultiStepForm
-                onComplete={handleComplete}
-                onStepChange={handleStepChange}
-                isSubmitting={isSubmitting}
-                setIsSubmitting={setIsSubmitting}
-                shouldProceed={shouldProceed}
-                shouldGoBack={shouldGoBack}
-                shouldSubmitAndPay={shouldSubmitAndPay}
-                shouldSubmitTicket={shouldSubmitTicket}
-                initialService={initialService}
-              />
+            <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 min-h-0">
+              <MultiStepForm />
+              
+              {/* Error Display */}
+              {submissionError && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-sm text-red-600">{submissionError}</p>
+                </div>
+              )}
             </div>
 
             {/* Fixed Footer */}
-            <div className="px-6 py-4 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
               <div className="flex justify-between items-center">
-                <div className="text-sm text-muted-foreground">
-                  Step {currentStep} of 3
+                <div className="text-xs sm:text-sm text-muted-foreground">
+                  Step {currentStep} of 4
                 </div>
-                <div className="flex gap-3">
-                  {currentStep > 1 && currentStep < 3 && (
+                <div className="flex gap-2 sm:gap-3">
+                  {currentStep > 1 && currentStep < 4 && (
                     <Button
                       variant="outline"
-                      onClick={handleBack}
-                      disabled={isSubmitting}
+                      onClick={prevStep}
+                      size="sm"
+                      className="sm:text-base"
                     >
                       Back
                     </Button>
                   )}
                   {currentStep === 3 ? (
-                    <>
-                      <Button
-                        variant="outline"
-                        onClick={handleSubmitTicket}
-                        disabled={!canProceed || isSubmitting}
-                      >
-                        Submit Ticket
-                      </Button>
-                      <Button
-                        onClick={handleSubmitAndPay}
-                        disabled={!canProceed || isSubmitting}
-                      >
-                        Submit & Pay
-                      </Button>
-                    </>
-                  ) : (
                     <Button
-                      onClick={handleContinue}
-                      disabled={!canProceed || isSubmitting}
-                      className="min-w-[120px]"
+                      onClick={submitForm}
+                      disabled={isSubmitting}
+                      size="sm"
+                      className="min-w-[100px] sm:min-w-[120px] sm:text-base"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        'Submit Ticket'
+                      )}
+                    </Button>
+                  ) : currentStep < 3 ? (
+                    <Button
+                      onClick={nextStep}
+                      size="sm"
+                      className="min-w-[100px] sm:min-w-[120px] sm:text-base"
                     >
                       Continue
                     </Button>
-                  )}
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -192,4 +147,6 @@ export const LeadFormModal = ({ isOpen, onClose, onComplete, initialService }: L
       )}
     </AnimatePresence>
   );
-}; 
+};
+
+ 

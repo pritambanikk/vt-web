@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { useForm } from "@/contexts/form-context";
+import { useFormContext } from "@/contexts/form-context";
 
 export function ServicesOverviewSection() {
-  const { openForm } = useForm();
+  const { openForm } = useFormContext();
   const services = [
     {
       title: "Legal Notice",

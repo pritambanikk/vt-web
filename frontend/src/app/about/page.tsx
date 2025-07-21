@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useForm } from "@/contexts/form-context";
+import { useFormContext } from "@/contexts/form-context";
 import { Users, Target, Shield, Zap, Heart } from "lucide-react";
 
 export default function AboutPage() {
-  const { openForm } = useForm();
+  const { openForm } = useFormContext();
 
   const values = [
     {

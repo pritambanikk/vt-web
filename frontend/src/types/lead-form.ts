@@ -9,12 +9,17 @@ export interface LeadFormData {
   service: 'legal-notice' | 'consultation' | 'document-drafting' | 'corporate-retainer';
   serviceDetails?: string;
   
-  // Step 3: Payment Choice
-  paymentChoice: 'pay-advance' | 'submit-only';
+  // Step 3: Review (no payment choice)
+  // Step 4: Post-submission (paymentChoice set by WhatsNextStep)
+  paymentChoice?: 'pay-advance' | 'submit-only';
   
   // Metadata
   step: number;
   submittedAt?: Date;
+  
+  // Submission response data
+  leadId?: string;
+  submissionSuccess?: boolean;
 }
 
 export interface FormStep {

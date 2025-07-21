@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -12,22 +12,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+import { useFormContext } from "@/contexts/form-context";
 
-interface HeaderProps {
-  onOpenForm?: () => void;
-}
-
-export function Header({ onOpenForm }: HeaderProps) {
+export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { openForm } = useFormContext();
 
   const handleMobileMenuClose = () => {
     setIsMobileMenuOpen(false);
   };
 
   const handleOpenForm = () => {
-    if (onOpenForm) {
-      onOpenForm();
-    }
+    openForm();
     handleMobileMenuClose();
   };
 
@@ -97,7 +93,7 @@ export function Header({ onOpenForm }: HeaderProps) {
             </DropdownMenuContent>
           </DropdownMenu>
           
-          <Button onClick={onOpenForm} size="sm">
+          <Button onClick={() => openForm()} size="sm">
             Get Started
           </Button>
         </nav>

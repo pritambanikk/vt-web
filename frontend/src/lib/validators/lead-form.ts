@@ -45,9 +45,10 @@ export const paymentChoiceSchema = z.object({
 export const leadFormSchema = z.object({
   ...personalDetailsSchema.shape,
   ...serviceSelectionSchema.shape,
-  ...paymentChoiceSchema.shape,
-  step: z.number().min(1).max(3),
-  submittedAt: z.date().optional(),
+  // paymentChoice is set in step 4 only
+  paymentChoice: z.enum(['pay-advance', 'submit-only']).optional(),
+  step: z.number().min(1).max(4),
+  submittedAt: z.union([z.date(), z.string().datetime()]).optional(),
 });
 
 export type PersonalDetailsFormData = z.infer<typeof personalDetailsSchema>;

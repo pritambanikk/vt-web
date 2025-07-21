@@ -2,11 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useForm } from "@/contexts/form-context";
+import { useFormContext } from "@/contexts/form-context";
 import { SimpleProcess } from "../homepage/simple-process";
 
 export function LegalNoticeLanding() {
-  const { openForm } = useForm();
+  const { openForm } = useFormContext();
   
   const features = [
     {
@@ -55,7 +55,7 @@ export function LegalNoticeLanding() {
       <section className="text-center py-16 md:py-20">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
-            Professional Legal Notices
+            Professional <span className="text-primary/70">Legal Notices</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Expert legal notices for payment recovery, contract breaches, and compliance issues. 
