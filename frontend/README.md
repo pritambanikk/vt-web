@@ -115,3 +115,26 @@ This project is part of the Vakil Tech platform.
 2. Write meaningful commit messages
 3. Test your changes thoroughly
 4. Update documentation as needed
+
+## Analytics Setup (Google Analytics 4)
+
+To enable analytics, add the following to your .env.local file:
+
+NEXT_PUBLIC_ANALYTICS_ID=your-ga4-measurement-id
+ANALYTICS_PROVIDER=google-analytics-4
+
+Replace `your-ga4-measurement-id` with your Google Analytics 4 Measurement ID (e.g., G-XXXXXXXXXX).
+
+## Analytics Debugging & Testing Utilities
+
+- Analytics runs in debug mode automatically in development (not in production).
+- All analytics events and errors are logged to the browser console when debug mode is active.
+- You can trigger a test event from any component using the `testEvent` function from the `useAnalytics` hook:
+
+```js
+import { useAnalytics } from '@/hooks/use-analytics';
+const { testEvent, debug } = useAnalytics();
+if (debug) testEvent();
+```
+
+- Use this to verify analytics integration during development.

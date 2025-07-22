@@ -3,32 +3,37 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { formElementVariants, staggerContainer } from '@/lib/animations';
 import { LeadFormData } from '@/types/lead-form';
-import { Pencil } from 'lucide-react';
+import { Pencil, CreditCard, Send } from 'lucide-react';
+import { getPaymentConfig, formatAmount } from '@/lib/payment-config';
+import { useFormContext } from '@/contexts/form-context';
 
 interface ReviewPaymentStepProps {
   formData: Partial<LeadFormData>;
   onEditPersonalDetails?: () => void;
 }
 
-const servicePrices = {
-  'legal-notice': '₹999',
-  'consultation': '₹1,499',
-  'document-drafting': '₹2,499',
-  'corporate-retainer': '₹9,999',
+// Get payment config for the selected service
+const getServicePrice = (service: string) => {
+  const config = getPaymentConfig(service);
+  return config ? formatAmount(config.amount) : '';
 };
 
 export const ReviewPaymentStep = ({ 
   formData, 
   onEditPersonalDetails
 }: ReviewPaymentStepProps) => {
+  const { submitForm, processPayment, isSubmitting, isProcessingPayment, submissionError, paymentError } = useFormContext();
+  
   // Fallbacks for required fields
   const name = formData.name || '';
   const location = formData.location || '';
   const whatsappNumber = formData.whatsappNumber || '';
   const service = formData.service || '';
   const serviceDetails = formData.serviceDetails || '';
+  const paymentChoice = formData.paymentChoice || 'submit-only';
 
   return (
     <motion.div
@@ -71,7 +76,7 @@ export const ReviewPaymentStep = ({
                   <span className="font-medium">Service:</span> {service ? service.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()) : ''}
                 </p>
                 <p className="text-sm">
-                  <span className="font-medium">Price:</span> {servicePrices[service as keyof typeof servicePrices] || ''}
+                  <span className="font-medium">Price:</span> {getServicePrice(service)}
                 </p>
                 {serviceDetails && (
                   <p className="text-sm">
@@ -80,8 +85,58 @@ export const ReviewPaymentStep = ({
                 )}
               </div>
             </div>
+            <div className="space-y-2">
+              <h4 className="font-medium text-xs text-muted-foreground uppercase tracking-wide">Payment Choice</h4>
+              <div className="space-y-1">
+                <p className="text-sm">
+                  <span className="font-medium">Option:</span> {paymentChoice === 'pay-advance' ? 'Pay Advance' : 'Submit Only'}
+                </p>
+                {paymentChoice === 'pay-advance' && (
+                  <p className="text-sm">
+                    <span className="font-medium">Advance Amount:</span> {getServicePrice(service)}
+                  </p>
+                )}
+              </div>
+            </div>
           </CardContent>
         </Card>
+      </motion.div>
+
+      {/* Action Buttons */}
+      <motion.div variants={formElementVariants} className="space-y-3">
+        {/* Error Messages */}
+        {submissionError && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+            <p className="text-sm text-red-600">{submissionError}</p>
+          </div>
+        )}
+        {paymentError && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+            <p className="text-sm text-red-600">{paymentError}</p>
+          </div>
+        )}
+
+        {/* Payment Choice Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button
+            onClick={submitForm}
+            disabled={isSubmitting || isProcessingPayment}
+            className="flex-1"
+            variant="outline"
+          >
+            <Send className="w-4 h-4 mr-2" />
+            {isSubmitting ? 'Submitting...' : 'Submit Only'}
+          </Button>
+          
+          <Button
+            onClick={processPayment}
+            disabled={isSubmitting || isProcessingPayment}
+            className="flex-1"
+          >
+            <CreditCard className="w-4 h-4 mr-2" />
+            {isProcessingPayment ? 'Processing...' : `Pay Advance (${getServicePrice(service)})`}
+          </Button>
+        </div>
       </motion.div>
     </motion.div>
   );

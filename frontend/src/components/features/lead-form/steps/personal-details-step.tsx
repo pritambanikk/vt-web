@@ -7,36 +7,40 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SimpleCombobox } from '@/components/ui/simple-combobox';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { personalDetailsSchema, PersonalDetailsFormData } from '@/lib/validators/lead-form';
 import { formElementVariants, staggerContainer } from '@/lib/animations';
-import { indianCities, IndianCity } from '@/data/indian-cities';
+import { indianCities, IndianCity, countryCodes, CountryCode, defaultCountryCode } from '@/data/indian-cities';
 import { useState, useEffect } from 'react';
 
 interface PersonalDetailsStepProps {
   initialData?: Partial<PersonalDetailsFormData>;
   onNext: (data: PersonalDetailsFormData) => void;
   onDataUpdate?: (data: Partial<PersonalDetailsFormData>) => void;
+  setIsStepValid?: (valid: boolean) => void;
 }
 
-export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate }: PersonalDetailsStepProps) => {
+export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsStepValid }: PersonalDetailsStepProps) => {
   const [selectedCity, setSelectedCity] = useState<string>(initialData?.location || '');
   const [filteredCities, setFilteredCities] = useState<IndianCity[]>([]);
   const [cityOptions, setCityOptions] = useState<{ value: string; label: string }[]>([]);
+  const [selectedCountryCode, setSelectedCountryCode] = useState<CountryCode>(defaultCountryCode);
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
 
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<PersonalDetailsFormData>({
     resolver: zodResolver(personalDetailsSchema),
-    defaultValues: initialData,
+    defaultValues: { whatsappConsent: true, ...initialData },
     mode: 'onChange',
   });
 
-
-
-
+  useEffect(() => {
+    if (setIsStepValid) setIsStepValid(isValid);
+  }, [isValid, setIsStepValid]);
 
   // Update city options when filtered cities change
   useEffect(() => {
@@ -70,9 +74,23 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate }: Perso
     onDataUpdate?.({ name: value });
   };
 
-  const handleWhatsAppChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    onDataUpdate?.({ whatsappNumber: value });
+    setPhoneNumber(value);
+    const fullNumber = selectedCountryCode.dialCode + value;
+    setValue('whatsappNumber', fullNumber, { shouldValidate: true });
+    onDataUpdate?.({ whatsappNumber: fullNumber });
+  };
+
+  const handleCountryCodeChange = (value: string) => {
+    const [countryCode, dialCode] = value.split('-');
+    const country = countryCodes.find(c => c.code === countryCode && c.dialCode === dialCode);
+    if (country) {
+      setSelectedCountryCode(country);
+      const fullNumber = country.dialCode + phoneNumber;
+      setValue('whatsappNumber', fullNumber, { shouldValidate: true });
+      onDataUpdate?.({ whatsappNumber: fullNumber });
+    }
   };
 
   return (
@@ -82,8 +100,6 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate }: Perso
       animate="visible"
       className="space-y-6"
     >
-
-
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <motion.div variants={formElementVariants} className="space-y-2">
           <Label htmlFor="name">Full Name *</Label>
@@ -120,7 +136,7 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate }: Perso
             placeholder="Search and select your city"
             searchPlaceholder="Search cities..."
             emptyMessage="No cities found. Try a different search term."
-                            className={errors.location ? 'border-destructive' : ''}
+            className={errors.location ? 'border-destructive' : ''}
           />
           {errors.location && (
             <motion.p
@@ -140,17 +156,38 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate }: Perso
 
         <motion.div variants={formElementVariants} className="space-y-2">
           <Label htmlFor="whatsappNumber">WhatsApp Number *</Label>
-          <Input
-            id="whatsappNumber"
-            type="tel"
-            placeholder="+91 98765 43210"
-            {...register('whatsappNumber')}
-            onChange={(e) => {
-              register('whatsappNumber').onChange(e);
-              handleWhatsAppChange(e);
-            }}
-            aria-describedby={errors.whatsappNumber ? 'whatsapp-error' : undefined}
-          />
+          <div className="flex gap-2">
+            <Select value={`${selectedCountryCode.code}-${selectedCountryCode.dialCode}`} onValueChange={handleCountryCodeChange}>
+              <SelectTrigger className="w-[120px] text-base">
+                <SelectValue>
+                  <span className="flex items-center gap-1">
+                    <span>{selectedCountryCode.flag}</span>
+                    <span>{selectedCountryCode.dialCode}</span>
+                  </span>
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {countryCodes.map((country) => (
+                  <SelectItem key={country.code} value={`${country.code}-${country.dialCode}`}>
+                    <span className="flex items-center gap-2">
+                      <span>{country.flag}</span>
+                      <span>{country.name}</span>
+                      <span className="text-muted-foreground">{country.dialCode}</span>
+                    </span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Input
+              id="whatsappNumber"
+              type="tel"
+              placeholder="98765 43210"
+              className="text-base flex-1"
+              value={phoneNumber}
+              onChange={handlePhoneNumberChange}
+              aria-describedby={errors.whatsappNumber ? 'whatsapp-error' : undefined}
+            />
+          </div>
           {errors.whatsappNumber && (
             <motion.p
               id="whatsapp-error"
@@ -168,6 +205,7 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate }: Perso
           <div className="flex items-start space-x-2">
             <Checkbox
               id="whatsappConsent"
+              defaultChecked={true}
               {...register('whatsappConsent')}
               onCheckedChange={(checked) => {
                 setValue('whatsappConsent', checked as boolean, { shouldValidate: true });

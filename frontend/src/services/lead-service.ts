@@ -20,6 +20,21 @@ export interface LeadSubmissionResponse {
   message?: string;
 }
 
+export interface LeadUpdateRequest {
+  payment_status?: 'pending' | 'paid' | 'failed';
+  payment_id?: string;
+  payment_amount?: number;
+  status?: 'new' | 'processing' | 'completed';
+  [key: string]: string | number | boolean | undefined;
+}
+
+export interface LeadUpdateResponse {
+  success: boolean;
+  leadId?: string;
+  error?: string;
+  message?: string;
+}
+
 // Service class for lead operations
 export class LeadService {
   private static readonly API_BASE_URL = '/api/leads';
@@ -122,8 +137,60 @@ export class LeadService {
       message: 'Please try again later or contact support.'
     };
   }
+
+  /**
+   * Update lead payment status
+   */
+  static async updateLeadPayment(
+    leadId: string,
+    updateData: LeadUpdateRequest
+  ): Promise<LeadUpdateResponse> {
+    try {
+      const response = await fetch(`${LeadService.API_BASE_URL}/${leadId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const result: LeadUpdateResponse = await response.json();
+      return result;
+
+    } catch (error) {
+      console.error('Lead update error:', error);
+      
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        return {
+          success: false,
+          error: 'Network error',
+          message: 'Please check your internet connection and try again.'
+        };
+      }
+
+      if (error instanceof Error) {
+        return {
+          success: false,
+          error: 'Update failed',
+          message: error.message
+        };
+      }
+
+      return {
+        success: false,
+        error: 'Unknown error',
+        message: 'Something went wrong. Please try again later.'
+      };
+    }
+  }
 }
 
 // Export convenience functions
 export const submitLead = LeadService.submitLead;
-export const submitLeadWithRetry = LeadService.submitLeadWithRetry; 
+export const submitLeadWithRetry = LeadService.submitLeadWithRetry;
+export const updateLeadPayment = LeadService.updateLeadPayment; 

@@ -3,6 +3,9 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { LeadFormData } from '@/types/lead-form';
 import { submitLead } from '@/services/lead-service';
+import { initializePayment } from '@/services/payment-service';
+import { createPaymentRequest } from '@/lib/payment-config';
+import { useAnalytics } from '@/hooks/use-analytics';
 
 interface FormContextType {
   currentStep: number;
@@ -16,8 +19,11 @@ interface FormContextType {
   closeForm: () => void;
   isFormOpen: boolean;
   isSubmitting: boolean;
+  isProcessingPayment: boolean;
   submitForm: () => Promise<void>;
+  processPayment: () => Promise<void>;
   submissionError: string | null;
+  paymentError: string | null;
 }
 
 interface FormProviderProps {
@@ -34,7 +40,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
   );
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   const updateFormData = useCallback((data: Partial<LeadFormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
@@ -78,6 +86,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
     resetForm();
   }, [resetForm]);
 
+  const { logEvent } = useAnalytics();
+
   const submitForm = useCallback(async () => {
     if (!formData.name || !formData.location || !formData.whatsappNumber || !formData.service) {
       setSubmissionError('Please complete all required fields');
@@ -95,8 +105,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
         whatsappNumber: formData.whatsappNumber!,
         service: formData.service!,
         serviceDetails: formData.serviceDetails || undefined,
-        paymentChoice: 'submit-only', // Default for now
-        whatsappConsent: formData.whatsappConsent || false,
+        paymentChoice: formData.paymentChoice || 'submit-only',
+        whatsappConsent: formData.whatsappConsent ?? true,
         step: currentStep,
         submittedAt: new Date()
       };
@@ -108,7 +118,13 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
         updateFormData({
           leadId: result.leadId,
           submissionSuccess: true,
-          paymentChoice: 'submit-only'
+          paymentChoice: completeFormData.paymentChoice
+        });
+        // Analytics: Lead form submitted
+        logEvent('lead_form_submitted', {
+          service: completeFormData.service,
+          payment_choice: completeFormData.paymentChoice,
+          form_step_count: completeFormData.step,
         });
         // Move to next step
         nextStep();
@@ -121,7 +137,62 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, updateFormData, nextStep, currentStep]);
+  }, [formData, updateFormData, nextStep, currentStep, logEvent]);
+
+  const processPayment = useCallback(async () => {
+    if (!formData.leadId || !formData.service || !formData.name) {
+      setPaymentError('Missing required data for payment');
+      return;
+    }
+
+    setIsProcessingPayment(true);
+    setPaymentError(null);
+
+    try {
+      // Create payment request
+      const paymentRequest = createPaymentRequest(
+        formData.service,
+        formData.leadId,
+        formData.name
+      );
+
+      if (!paymentRequest) {
+        setPaymentError('Failed to create payment request');
+        return;
+      }
+
+      // Initialize payment
+      await initializePayment(
+        paymentRequest,
+        formData.name,
+        formData.whatsappNumber || '',
+        (response) => {
+          // Payment successful
+          updateFormData({
+            paymentSuccess: true,
+            paymentId: response.razorpay_payment_id
+          });
+          // Analytics: Advance paid
+          logEvent('advance_paid', {
+            service: formData.service,
+            payment_amount: paymentRequest.amount,
+            payment_method: 'razorpay',
+            lead_id: formData.leadId,
+          });
+          nextStep();
+        },
+        (error) => {
+          setPaymentError(error);
+        }
+      );
+
+    } catch (err) {
+      setPaymentError('Payment initialization failed. Please try again.');
+      console.error('Payment error:', err);
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  }, [formData, updateFormData, nextStep, logEvent]);
 
   return (
     <FormContext.Provider
@@ -137,8 +208,11 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
         closeForm,
         isFormOpen,
         isSubmitting,
+        isProcessingPayment,
         submitForm,
-        submissionError
+        processPayment,
+        submissionError,
+        paymentError
       }}
     >
       {children}

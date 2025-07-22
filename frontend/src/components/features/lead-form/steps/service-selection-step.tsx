@@ -3,17 +3,19 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { serviceSelectionSchema, ServiceSelectionFormData } from '@/lib/validators/lead-form';
 import { formElementVariants, staggerContainer } from '@/lib/animations';
+import { useEffect } from 'react';
+import { useAnalytics } from '@/hooks/use-analytics';
 
 interface ServiceSelectionStepProps {
   initialData?: Partial<ServiceSelectionFormData>;
   onNext: (data: ServiceSelectionFormData) => void;
   onDataUpdate?: (data: Partial<ServiceSelectionFormData>) => void;
+  setIsStepValid?: (valid: boolean) => void;
 }
 
 const services = [
@@ -43,20 +45,25 @@ const services = [
   },
 ];
 
-export const ServiceSelectionStep = ({ initialData, onNext, onDataUpdate }: ServiceSelectionStepProps) => {
+export const ServiceSelectionStep = ({ initialData, onNext, onDataUpdate, setIsStepValid }: ServiceSelectionStepProps) => {
   const {
     register,
     handleSubmit,
     setValue,
     watch,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<ServiceSelectionFormData>({
     resolver: zodResolver(serviceSelectionSchema),
     defaultValues: initialData,
     mode: 'onChange',
   });
 
+  useEffect(() => {
+    if (setIsStepValid) setIsStepValid(isValid);
+  }, [isValid, setIsStepValid]);
+
   const selectedService = watch('service');
+  const { logEvent } = useAnalytics();
 
   const onSubmit = (data: ServiceSelectionFormData) => {
     onNext(data);
@@ -66,6 +73,10 @@ export const ServiceSelectionStep = ({ initialData, onNext, onDataUpdate }: Serv
     setValue('service', value as ServiceSelectionFormData['service'], { shouldValidate: true });
     // Update parent data when service is selected
     onDataUpdate?.({ service: value as ServiceSelectionFormData['service'] });
+    logEvent('service_selected', {
+      service: value,
+      step_number: 2,
+    });
   };
 
   return (

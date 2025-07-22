@@ -7,8 +7,14 @@ import { ReviewPaymentStep } from './steps/review-payment-step';
 import { WhatsNextStep } from './steps/whats-next-step';
 import { stepVariants } from '@/lib/animations';
 import { useFormContext } from '@/contexts/form-context';
+import { useEffect } from 'react';
+import { useAnalytics } from '@/hooks/use-analytics';
 
-export const MultiStepForm = () => {
+interface MultiStepFormProps {
+  setIsStepValid?: (valid: boolean) => void;
+}
+
+export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
   const {
     currentStep,
     formData,
@@ -18,8 +24,23 @@ export const MultiStepForm = () => {
     goToStep,
   } = useFormContext();
 
+  const { logEvent } = useAnalytics();
+
+  // Set step validity for steps that don't have form validation
+  useEffect(() => {
+    if (setIsStepValid) {
+      if (currentStep === 3 || currentStep === 4) {
+        setIsStepValid(true);
+      }
+    }
+  }, [currentStep, setIsStepValid]);
+
   const handleStepComplete = (stepData: Record<string, unknown>) => {
     updateFormData(stepData);
+    logEvent('form_step_completed', {
+      step_number: currentStep,
+      service: formData.service || stepData.service || undefined,
+    });
     if (currentStep === 1) {
       // If service is already selected, skip to review
       if (formData.service) {
@@ -44,6 +65,7 @@ export const MultiStepForm = () => {
             initialData={formData}
             onNext={handleStepComplete}
             onDataUpdate={handleFormDataUpdate}
+            setIsStepValid={setIsStepValid}
           />
         );
       case 2:
@@ -52,6 +74,7 @@ export const MultiStepForm = () => {
             initialData={formData}
             onNext={handleStepComplete}
             onDataUpdate={handleFormDataUpdate}
+            setIsStepValid={setIsStepValid}
           />
         );
       case 3:
@@ -76,8 +99,8 @@ export const MultiStepForm = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-4 sm:space-y-6">
-      <div className="min-h-[300px] sm:min-h-[400px]">
+    <div className="w-full max-w-2xl mx-auto space-y-4 sm:space-y-6 overflow-hidden">
+      <div className="min-h-[50svh] p-2 sm:min-h-[60dvh] max-h-[70svh] sm:max-h-[75dvh] overflow-y-auto">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -86,6 +109,7 @@ export const MultiStepForm = () => {
             animate="visible"
             exit="exit"
             transition={{ duration: 0.3 }}
+            className="w-full"
           >
             {renderCurrentStep()}
           </motion.div>

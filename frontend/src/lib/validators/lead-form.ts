@@ -14,7 +14,7 @@ export const personalDetailsSchema = z.object({
     .trim(),
   whatsappNumber: z
     .string()
-    .regex(/^(\+91|91)?[6-9]\d{9}$/, 'Please enter a valid Indian phone number')
+    .regex(/^\+?[1-9]\d{1,14}$/, 'Please enter a valid phone number')
     .trim(),
   whatsappConsent: z
     .boolean()

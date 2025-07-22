@@ -12,6 +12,7 @@ import { MultiStepForm } from './multi-step-form';
 import { ProgressIndicator } from './progress-indicator';
 import { useFormContext } from '@/contexts/form-context';
 import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 export const LeadFormModal = () => {
   const { 
@@ -24,6 +25,8 @@ export const LeadFormModal = () => {
     submitForm, 
     submissionError 
   } = useFormContext();
+
+  const [isStepValid, setIsStepValid] = useState(false);
 
   const getStepTitle = () => {
     switch (currentStep) {
@@ -66,7 +69,7 @@ export const LeadFormModal = () => {
     <AnimatePresence>
       {isFormOpen && (
         <Dialog open={isFormOpen} onOpenChange={closeForm}>
-          <DialogContent className="w-[95vw] max-w-4xl h-[95svh] max-h-[95svh] flex flex-col p-0 mx-auto">
+          <DialogContent className="w-[95vw] max-w-4xl h-[90svh] sm:h-[95dvh] max-h-[90svh] sm:max-h-[95dvh] flex flex-col p-0 mx-auto overflow-hidden">
             {/* Fixed Header */}
             <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
               <DialogTitle className="text-lg sm:text-xl font-semibold">
@@ -86,8 +89,8 @@ export const LeadFormModal = () => {
             </DialogHeader>
             
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 min-h-0">
-              <MultiStepForm />
+            <div className="flex-1 overflow-hidden px-4 sm:px-6 py-4 sm:py-6">
+              <MultiStepForm setIsStepValid={setIsStepValid} />
               
               {/* Error Display */}
               {submissionError && (
@@ -135,6 +138,7 @@ export const LeadFormModal = () => {
                       onClick={nextStep}
                       size="sm"
                       className="min-w-[100px] sm:min-w-[120px] sm:text-base"
+                      disabled={!isStepValid}
                     >
                       Continue
                     </Button>

@@ -2,9 +2,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle2, PartyPopper } from 'lucide-react';
+import { CheckCircle2, PartyPopper, CreditCard } from 'lucide-react';
 import { LeadFormData } from '@/types/lead-form';
 import { useFormContext } from '@/contexts/form-context';
+import { getPaymentConfig, formatAmount } from '@/lib/payment-config';
+import { useAnalytics } from '@/hooks/use-analytics';
+import { useEffect } from 'react';
 
 interface WhatsNextStepProps {
   formData: Partial<LeadFormData>;
@@ -14,22 +17,27 @@ interface WhatsNextStepProps {
 }
 
 export const WhatsNextStep = ({ formData, onComplete, leadId, submissionSuccess }: WhatsNextStepProps) => {
-  const { closeForm } = useFormContext();
+  const { closeForm, processPayment, isProcessingPayment } = useFormContext();
+  const { logEvent } = useAnalytics();
+
+  useEffect(() => {
+    if (formData && (formData.submissionSuccess || formData.paymentSuccess)) {
+      logEvent('lead_form_success', {
+        lead_id: leadId,
+        payment_success: !!formData.paymentSuccess,
+      });
+    }
+  }, [formData, leadId, logEvent]);
+  
+  // Get payment amount for the service
+  const getPaymentAmount = () => {
+    const config = getPaymentConfig(formData.service || 'consultation');
+    return config ? formatAmount(config.amount) : '₹400';
+  };
 
   // Handler for Pay Now CTA
   const handlePayNow = () => {
-    // TODO: Integrate payment logic
-    onComplete({ 
-      name: formData.name || '',
-      location: formData.location || '',
-      whatsappNumber: formData.whatsappNumber || '',
-      whatsappConsent: formData.whatsappConsent || false,
-      service: formData.service || 'consultation',
-      serviceDetails: formData.serviceDetails || '',
-      step: formData.step || 4,
-      paymentChoice: 'pay-advance'
-    });
-    closeForm();
+    processPayment();
   };
 
   // Handler for Close CTA
@@ -72,22 +80,36 @@ export const WhatsNextStep = ({ formData, onComplete, leadId, submissionSuccess 
         </CardHeader>
         <CardContent className="space-y-3 text-center">
           <p className="text-base font-medium">Thank you, {formData.name}!</p>
-          {submissionSuccess ? (
+          {formData.paymentSuccess ? (
+            <p className="text-sm text-muted-foreground">
+              Your lead has been successfully submitted and payment completed! (ID: {leadId})<br />
+              Payment ID: {formData.paymentId}<br />
+              Our team will review your request and reach out on WhatsApp soon.
+            </p>
+          ) : submissionSuccess ? (
             <p className="text-sm text-muted-foreground">
               Your lead has been successfully submitted! (ID: {leadId})<br />
               Our team will review your request and reach out on WhatsApp soon.<br />
-              To get started faster, pay a <span className="font-semibold text-primary">₹400 advance</span> now.
+              To get started faster, pay a <span className="font-semibold text-primary">{getPaymentAmount()} advance</span> now.
             </p>
           ) : (
             <p className="text-sm text-muted-foreground">
               Our team will review your request and reach out on WhatsApp soon.<br />
-              To get started faster, pay a <span className="font-semibold text-primary">₹400 advance</span> now.
+              To get started faster, pay a <span className="font-semibold text-primary">{getPaymentAmount()} advance</span> now.
             </p>
           )}
           <div className="flex flex-col gap-3 mt-4">
-            <Button onClick={handlePayNow} className="w-full" size="lg">
-              Pay 400 Advance
-            </Button>
+            {!formData.paymentSuccess && (
+              <Button 
+                onClick={handlePayNow} 
+                className="w-full" 
+                size="lg"
+                disabled={isProcessingPayment}
+              >
+                <CreditCard className="w-4 h-4 mr-2" />
+                {isProcessingPayment ? 'Processing...' : `Pay ${getPaymentAmount()} Advance`}
+              </Button>
+            )}
             <Button onClick={handleClose} variant="outline" className="w-full" size="lg">
               Close
             </Button>

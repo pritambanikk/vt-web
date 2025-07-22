@@ -177,3 +177,35 @@ export const getStateByCity = (cityName: string): string | null => {
   );
   return city ? city.state : null;
 }; 
+
+export interface CountryCode {
+  code: string;
+  name: string;
+  flag: string;
+  dialCode: string;
+}
+
+export const countryCodes: CountryCode[] = [
+  { code: 'IN', name: 'India', flag: '🇮🇳', dialCode: '+91' },
+  { code: 'US', name: 'United States', flag: '🇺🇸', dialCode: '+1' },
+  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧', dialCode: '+44' },
+  { code: 'CA', name: 'Canada', flag: '🇨🇦', dialCode: '+1' },
+  { code: 'AU', name: 'Australia', flag: '🇦🇺', dialCode: '+61' },
+  { code: 'DE', name: 'Germany', flag: '🇩🇪', dialCode: '+49' },
+  { code: 'FR', name: 'France', flag: '🇫🇷', dialCode: '+33' },
+  { code: 'JP', name: 'Japan', flag: '🇯🇵', dialCode: '+81' },
+  { code: 'SG', name: 'Singapore', flag: '🇸🇬', dialCode: '+65' },
+  { code: 'AE', name: 'United Arab Emirates', flag: '🇦🇪', dialCode: '+971' },
+  { code: 'SA', name: 'Saudi Arabia', flag: '🇸🇦', dialCode: '+966' },
+  { code: 'NZ', name: 'New Zealand', flag: '🇳🇿', dialCode: '+64' },
+  { code: 'NL', name: 'Netherlands', flag: '🇳🇱', dialCode: '+31' },
+  { code: 'IT', name: 'Italy', flag: '🇮🇹', dialCode: '+39' },
+  { code: 'ES', name: 'Spain', flag: '🇪🇸', dialCode: '+34' },
+  { code: 'BR', name: 'Brazil', flag: '🇧🇷', dialCode: '+55' },
+  { code: 'MX', name: 'Mexico', flag: '🇲🇽', dialCode: '+52' },
+  { code: 'KR', name: 'South Korea', flag: '🇰🇷', dialCode: '+82' },
+  { code: 'RU', name: 'Russia', flag: '🇷🇺', dialCode: '+7' },
+  { code: 'CN', name: 'China', flag: '🇨🇳', dialCode: '+86' },
+];
+
+export const defaultCountryCode = countryCodes.find(country => country.code === 'IN')!; 

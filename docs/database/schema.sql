@@ -10,9 +10,9 @@ CREATE TABLE leads (
   whatsapp_consent BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  payment_status VARCHAR(50) DEFAULT 'pending',
-  payment_amount DECIMAL(10,2),
-  payment_reference VARCHAR(255),
+  payment_status VARCHAR(50) DEFAULT 'pending' CHECK (payment_status IN ('pending', 'paid', 'failed', 'refunded')),
+  payment_id VARCHAR(255),
+  payment_amount INTEGER, -- Amount in paise (Razorpay format)
   status VARCHAR(50) DEFAULT 'new',
   notes TEXT
 );

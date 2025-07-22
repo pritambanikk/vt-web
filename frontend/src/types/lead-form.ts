@@ -20,7 +20,14 @@ export interface LeadFormData {
   // Submission response data
   leadId?: string;
   submissionSuccess?: boolean;
+  
+  // Payment data
+  paymentSuccess?: boolean;
+  paymentId?: string;
 }
+
+// Payment status types for database
+export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 
 export interface FormStep {
   id: number;

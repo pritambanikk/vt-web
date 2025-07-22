@@ -1,34 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { LeadFormData } from '@/types/lead-form';
 
-const STORAGE_KEY = 'lead-form-data';
 
-// Helper function to safely serialize data for localStorage
-const safeStringify = (obj: Record<string, unknown>): string => {
-  try {
-    // Filter out non-serializable properties
-    const cleanObj = Object.keys(obj).reduce((acc, key) => {
-      const value = obj[key];
-      // Only include primitive values, plain objects, and arrays
-      if (
-        value === null ||
-        value === undefined ||
-        typeof value === 'string' ||
-        typeof value === 'number' ||
-        typeof value === 'boolean' ||
-        (typeof value === 'object' && !(value instanceof Element) && !(value instanceof Event))
-      ) {
-        acc[key] = value;
-      }
-      return acc;
-    }, {} as Record<string, unknown>);
-    
-    return JSON.stringify(cleanObj);
-  } catch (error) {
-    console.warn('Failed to serialize form data:', error);
-    return '{}';
-  }
-};
 
 export const useMultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
