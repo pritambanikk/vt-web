@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyPaymentSignature, getPaymentDetails } from '@/lib/razorpay-client';
 import { supabaseServer } from '@/lib/supabase-server';
 import crypto from 'crypto';
 
@@ -38,7 +37,7 @@ interface WebhookEvent {
         error_source: string | null;
         error_step: string | null;
         error_reason: string | null;
-        acquirer_data: Record<string, any>;
+        acquirer_data: Record<string, unknown>;
         created_at: number;
       };
     };

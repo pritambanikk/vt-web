@@ -1,0 +1,12 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /api/*
+Disallow: /admin/*
+Disallow: /_next/*
+
+# Host
+Host: https://vakiltech.com
+
+# Sitemaps
+Sitemap: https://vakiltech.com/sitemap.xml

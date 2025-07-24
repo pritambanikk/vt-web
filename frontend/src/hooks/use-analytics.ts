@@ -6,7 +6,7 @@ export function useAnalytics() {
     trackPageView(url);
   }, []);
 
-  const logEvent = useCallback((event: string, params?: Record<string, any>) => {
+  const logEvent = useCallback((event: string, params?: Record<string, unknown>) => {
     trackEvent(event, params);
   }, []);
 

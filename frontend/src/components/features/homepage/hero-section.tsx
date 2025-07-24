@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import { WordRotate } from "@/components/ui/word-rotate";
 import { useFormContext } from "@/contexts/form-context";
@@ -23,7 +25,7 @@ export function HeroSection() {
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 text-foreground leading-tight">
           Find the Right Lawyer,
           <br />
-          <WordRotate className="text-primary" words={["Right Here!", "Right Now!", "Affordably!"]} />
+          <WordRotate className="text-primary text-5xl" words={["Send Legal Notice!", "Lawyer Consultation!", "Document Drafting!", "Corporate Legal Services!"]} />
           {/* <span className="text-primary">Right Here!</span> */}
         </h1>
         
@@ -34,8 +36,7 @@ export function HeroSection() {
         
         {/* Description */}
         <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-4xl mx-auto leading-relaxed">
-          Make legal work as easy as sending an email. Connect with local legal experts 
-          nationwide in India for affordable, dependable, and customized legal solutions.
+        Our team of top-tier lawyers delivers seamless legal solutions—fast, reliable, and effortless. <br />You ask. We handle. Done.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           <Button 

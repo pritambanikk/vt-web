@@ -18,10 +18,11 @@ interface LeadUpdateResponse {
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse<LeadUpdateResponse>> {
+  const { id } = await params;
   try {
-    const leadId = params.id;
+    const leadId = id;
     
     if (!leadId) {
       return NextResponse.json(

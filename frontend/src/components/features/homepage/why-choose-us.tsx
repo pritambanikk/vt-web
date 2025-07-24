@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "@/contexts/form-context";
 
@@ -38,7 +40,6 @@ export function WhyChooseUsSection() {
             legal solutions that actually work in our market.
           </p>
         </div>
-        
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
           {reasons.map((reason, index) => (
             <div key={index} className="flex items-start space-x-4 p-4 rounded-lg hover:bg-muted/30 transition-colors">

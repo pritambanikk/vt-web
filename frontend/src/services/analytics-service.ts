@@ -3,7 +3,7 @@ import { GA_MEASUREMENT_ID } from '../lib/analytics-config';
 
 declare global {
   interface Window {
-    gtag?: (...args: any[]) => void;
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
@@ -27,7 +27,7 @@ export function trackPageView(url: string) {
   }
 }
 
-export function trackEvent(event: string, params: Record<string, any> = {}) {
+export function trackEvent(event: string, params: Record<string, unknown> = {}) {
   if (!GA_MEASUREMENT_ID || typeof window === 'undefined') return;
   try {
     window.gtag?.('event', event, params);

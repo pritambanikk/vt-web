@@ -69,7 +69,7 @@ export const LeadFormModal = () => {
     <AnimatePresence>
       {isFormOpen && (
         <Dialog open={isFormOpen} onOpenChange={closeForm}>
-          <DialogContent className="w-[95vw] max-w-4xl h-[90svh] sm:h-[95dvh] max-h-[90svh] sm:max-h-[95dvh] flex flex-col p-0 mx-auto overflow-hidden">
+          <DialogContent className="w-[95vw] max-w-4xl h-[90svh] sm:h-[95dvh] max-h-[90svh] sm:max-h-[95dvh] flex flex-col p-0 mx-auto overflow-hidden touch-manipulation">
             {/* Fixed Header */}
             <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
               <DialogTitle className="text-lg sm:text-xl font-semibold">

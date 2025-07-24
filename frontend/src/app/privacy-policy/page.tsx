@@ -1,9 +1,13 @@
-"use client"
-
-import { Button } from "@/components/ui/button";
+import type { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LegalCTA } from "@/components/features/legal/legal-cta";
+import { generateLegalMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = generateLegalMetadata('privacy-policy');
 
 export default function PrivacyPolicyPage() {
+  const currentDate = new Date().toLocaleDateString();
+  
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-16">
@@ -16,7 +20,7 @@ export default function PrivacyPolicyPage() {
             Your privacy is important to us. This policy explains how we collect, use, and protect your information.
           </p>
           <p className="text-sm text-muted-foreground mt-4">
-            Last updated: {new Date().toLocaleDateString()}
+            Last updated: {currentDate}
           </p>
         </section>
 
@@ -186,28 +190,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="text-center mt-16">
-          <h2 className="text-2xl font-bold mb-4 text-foreground">
-            Questions About Your Privacy?
-          </h2>
-          <p className="text-muted-foreground mb-6">
-                              We&apos;re here to help. Contact us if you have any concerns about your data.
-          </p>
-          <div className="space-x-4">
-            <Button 
-              onClick={() => window.location.href = '/contact'}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            >
-              Contact Us
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => window.history.back()}
-            >
-              Go Back
-            </Button>
-          </div>
-        </section>
+        <LegalCTA />
       </div>
     </div>
   );
