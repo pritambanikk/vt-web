@@ -86,7 +86,6 @@ function Footerdemo() {
             <h3 className="mb-4 text-lg font-semibold">Contact Us</h3>
             <address className="space-y-2 text-sm not-italic">
               <p>Vakil Tech Legal Services</p>
-              <p>Mumbai, Maharashtra, India</p>
               <p>Phone: +91 98765 43210</p>
               <p>Email: contact@vakiltech.com</p>
             </address>

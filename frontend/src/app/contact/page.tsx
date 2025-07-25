@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { ContactInfo } from "@/components/features/contact/contact-info";
 import { ContactForm } from "@/components/features/contact/contact-form";
 import { QuickActions } from "@/components/features/contact/quick-actions";
-import { OfficeLocation } from "@/components/features/contact/office-location";
 import { generatePageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = generatePageMetadata('contact');
@@ -38,11 +37,6 @@ export default function ContactPage() {
         {/* Quick Actions */}
         <section className="mb-16">
           <QuickActions />
-        </section>
-
-        {/* Office Location */}
-        <section className="bg-muted/30 rounded-lg p-8">
-          <OfficeLocation />
         </section>
       </div>
     </div>

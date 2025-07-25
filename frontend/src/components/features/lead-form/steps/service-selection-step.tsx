@@ -89,7 +89,7 @@ export const ServiceSelectionStep = ({ initialData, onNext, onDataUpdate, setIsS
 
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <motion.div variants={formElementVariants} className="space-y-4">
+        <motion.div variants={formElementVariants} className="space-y-4 overflow-y-auto">
           <Label>Legal Service *</Label>
           <div className="grid gap-3">
             {services.map((service) => (

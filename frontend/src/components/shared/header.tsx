@@ -31,10 +31,9 @@ export function Header() {
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
-          <Image src="/logo.png" alt="Vakil Tech" width={200} height={200} />
+        <Link href="/" className="flex items-center space-x-2 dark:bg-white dark:p-2 dark:rounded-lg dark:shadow-md">
+          <Image src="/logo.png" alt="Vakil Tech" width={150} height={150} />
         </Link>
-
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
           <Link 
@@ -65,7 +64,7 @@ export function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center text-muted-foreground hover:text-primary transition-colors">
-                Services
+                Products
                 <ChevronDown className="ml-1 h-4 w-4" />
               </button>
             </DropdownMenuTrigger>

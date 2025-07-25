@@ -137,16 +137,6 @@
     appearance: none;
   }
   
-  /* Improve touch targets on mobile */
-  button,
-  [role="button"],
-  input[type="button"],
-  input[type="submit"],
-  input[type="reset"] {
-    min-height: 44px;
-    min-width: 44px;
-  }
-  
   /* Prevent text selection on interactive elements */
   button,
   [role="button"],

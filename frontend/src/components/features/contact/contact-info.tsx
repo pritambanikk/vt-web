@@ -18,14 +18,8 @@ export function ContactInfo() {
     {
       icon: <Mail className="h-6 w-6" />,
       title: "Email",
-      details: ["contact@vakiltech.com", "support@vakiltech.com"],
+      details: ["help@vakiltech.com", "support@vakiltech.com"],
       action: "Email us"
-    },
-    {
-      icon: <MapPin className="h-6 w-6" />,
-      title: "Office",
-      details: ["Vakil Tech Legal Services", "Mumbai, Maharashtra, India"],
-      action: "Get directions"
     },
     {
       icon: <Clock className="h-6 w-6" />,
@@ -36,9 +30,9 @@ export function ContactInfo() {
   ];
 
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="flex justify-center items-center gap-6 flex-wrap">
       {contactInfo.map((info, index) => (
-        <Card key={index} className="text-center hover:shadow-lg transition-all duration-300">
+        <Card key={index} className="text-center flex-wrap flex-1 hover:shadow-lg transition-all duration-300">
           <CardHeader>
             <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
               <div className="text-primary">{info.icon}</div>

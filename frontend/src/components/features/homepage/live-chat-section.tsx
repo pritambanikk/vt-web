@@ -158,21 +158,6 @@ export function LiveChatSection() {
           </motion.div>
         </motion.div>
 
-        {/* SVG squiggle/arrow */}
-        <div className="hidden md:block w-24 h-24 relative">
-          <svg width="100%" height="100%" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <motion.path
-              d="M10 80 Q48 10 86 80"
-              stroke="#F59E42"
-              strokeWidth="3"
-              fill="none"
-              initial={{ pathLength: 0 }}
-              whileInView={{ pathLength: 1 }}
-              transition={{ duration: 1.2, delay: 0.5 }}
-            />
-          </svg>
-        </div>
-
         {/* Right Side: Animated Chat */}
         <motion.div
           initial={{ opacity: 0, x: 40 }}

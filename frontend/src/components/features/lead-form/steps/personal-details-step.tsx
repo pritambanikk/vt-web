@@ -100,7 +100,7 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
       animate="visible"
       className="space-y-6"
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto">
         <motion.div variants={formElementVariants} className="space-y-2">
           <Label htmlFor="name">Full Name *</Label>
           <Input

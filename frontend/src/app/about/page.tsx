@@ -155,62 +155,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Our Team */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
-            Meet Our Team
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {team.map((member, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-all duration-300">
-                <CardHeader>
-                  <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Users className="h-8 w-8 text-primary" />
-                  </div>
-                  <CardTitle className="text-xl">{member.name}</CardTitle>
-                  <p className="text-primary font-semibold">{member.role}</p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2 text-sm">
-                    <p><strong>Expertise:</strong> {member.expertise}</p>
-                    <p><strong>Experience:</strong> {member.experience}</p>
-                    <p className="text-muted-foreground">{member.description}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* Milestones */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
-            Our Journey
-          </h2>
-          <div className="max-w-4xl mx-auto">
-            <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute left-1/2 transform -translate-x-px h-full w-0.5 bg-primary/20"></div>
-              
-              {milestones.map((milestone, index) => (
-                <div key={index} className={`relative flex items-center mb-8 ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}>
-                  {/* Timeline dot */}
-                  <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-primary rounded-full border-4 border-background"></div>
-                  
-                  {/* Content */}
-                  <div className={`w-5/12 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
-                    <div className="bg-card border rounded-lg p-6">
-                      <div className="text-2xl font-bold text-primary mb-2">{milestone.year}</div>
-                      <h3 className="text-lg font-semibold mb-2">{milestone.title}</h3>
-                      <p className="text-muted-foreground">{milestone.description}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Stats */}
         <section className="bg-muted/30 rounded-lg p-8 mb-16">
           <div className="text-center">

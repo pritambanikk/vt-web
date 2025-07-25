@@ -25,7 +25,7 @@ export function HeroSection() {
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 text-foreground leading-tight">
           Find the Right Lawyer,
           <br />
-          <WordRotate className="text-primary text-5xl" words={["Send Legal Notice!", "Lawyer Consultation!", "Document Drafting!", "Corporate Legal Services!"]} />
+          <WordRotate className="text-primary text-3xl md:text-5xl" words={["Send Legal Notices!", "Get Lawyer Consultation!", "Get Corporate Legal Services!"]} />
           {/* <span className="text-primary">Right Here!</span> */}
         </h1>
         

@@ -214,7 +214,6 @@ export default function TermsOfServicePage() {
                 <div className="space-y-2 text-muted-foreground">
                   <p>Email: legal@vakiltech.com</p>
                   <p>Phone: +91 98765 43210</p>
-                  <p>Address: Vakil Tech Legal Services, Mumbai, Maharashtra, India</p>
                 </div>
               </CardContent>
             </Card>

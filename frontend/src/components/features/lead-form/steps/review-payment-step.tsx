@@ -116,27 +116,6 @@ export const ReviewPaymentStep = ({
           </div>
         )}
 
-        {/* Payment Choice Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button
-            onClick={submitForm}
-            disabled={isSubmitting || isProcessingPayment}
-            className="flex-1"
-            variant="outline"
-          >
-            <Send className="w-4 h-4 mr-2" />
-            {isSubmitting ? 'Submitting...' : 'Submit Only'}
-          </Button>
-          
-          <Button
-            onClick={processPayment}
-            disabled={isSubmitting || isProcessingPayment}
-            className="flex-1"
-          >
-            <CreditCard className="w-4 h-4 mr-2" />
-            {isProcessingPayment ? 'Processing...' : `Pay Advance (${getServicePrice(service)})`}
-          </Button>
-        </div>
       </motion.div>
     </motion.div>
   );
