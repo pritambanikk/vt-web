@@ -117,6 +117,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
         // Update form data with submission response
         updateFormData({
           leadId: result.leadId,
+          customId: result.customId,
           submissionSuccess: true,
           paymentChoice: completeFormData.paymentChoice
         });

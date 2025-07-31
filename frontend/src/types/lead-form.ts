@@ -19,6 +19,7 @@ export interface LeadFormData {
   
   // Submission response data
   leadId?: string;
+  customId?: string;
   submissionSuccess?: boolean;
   
   // Payment data

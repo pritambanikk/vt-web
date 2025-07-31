@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabase-server';
 import { leadFormSchema } from '@/lib/validators/lead-form';
+import { validatePhoneNumber } from '@/lib/validators/phone-validation';
+import { countryCodes } from '@/data/indian-cities';
 import { z } from 'zod';
 
 // API Response interface
@@ -8,21 +10,54 @@ import { z } from 'zod';
 interface LeadSubmissionResponse {
   success: boolean;
   leadId?: string;
+  customId?: string;
   error?: string;
   message?: string;
+}
+
+// Function to generate custom ID: first4LettersOfName-last4DigitsOfPhone
+function generateCustomId(name: string, phoneNumber: string): string {
+  // Get first 4 letters of name (or less if name is shorter)
+  const namePart = name.replace(/\s+/g, '').toLowerCase().substring(0, 4);
+  
+  // Get last 4 digits of phone number
+  const phoneDigits = phoneNumber.replace(/\D/g, ''); // Remove non-digits
+  const phonePart = phoneDigits.slice(-4);
+  
+  // Generate a random 3-digit suffix to ensure uniqueness
+  const randomSuffix = Math.floor(Math.random() * 900) + 100; // 100-999
+  
+  return `${namePart}-${phonePart}-${randomSuffix}`;
 }
 
 // Database insertion schema (matches the leads table structure)
 const leadInsertSchema = z.object({
   name: z.string().min(2).max(255),
   location: z.string().min(3).max(255),
-  whatsapp_number: z.string().regex(/^(\+91|91)?[6-9]\d{9}$/),
+  whatsapp_number: z.string().refine((phoneNumber) => {
+    // Check if it's a valid international phone number
+    if (!phoneNumber.startsWith('+')) {
+      return false;
+    }
+    
+    // Extract country code and validate using our comprehensive phone validation
+    const country = countryCodes.find(c => phoneNumber.startsWith(c.dialCode));
+    if (!country) {
+      return false;
+    }
+    
+    const validation = validatePhoneNumber(phoneNumber.replace(country.dialCode, ''), country);
+    return validation.isValid;
+  }, {
+    message: 'Please enter a valid international phone number'
+  }),
   service: z.enum(['legal-notice', 'consultation', 'document-drafting', 'corporate-retainer']),
   service_details: z.string().max(500).optional(),
   payment_choice: z.enum(['pay-advance', 'submit-only']),
   whatsapp_consent: z.boolean(),
   payment_status: z.literal('pending'),
   status: z.literal('new'),
+  custom_id: z.string().min(1).max(50),
 });
 
 export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmissionResponse>> {
@@ -33,6 +68,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmi
     
     // Validate the incoming request data
     const validatedData = leadFormSchema.parse(body);
+    
+    // Generate custom ID
+    const customId = generateCustomId(validatedData.name, validatedData.whatsappNumber);
     
     // Transform form data to database format
     const leadData = {
@@ -45,6 +83,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmi
       whatsapp_consent: validatedData.whatsappConsent,
       payment_status: 'pending' as const,
       status: 'new' as const,
+      custom_id: customId,
     };
 
     // Validate the transformed data
@@ -54,7 +93,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmi
     const { data, error } = await supabaseServer
       .from('leads')
       .insert([validatedLeadData])
-      .select('id')
+      .select('id, custom_id')
       .single();
 
     if (error) {
@@ -73,6 +112,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmi
       {
         success: true,
         leadId: data.id,
+        customId: data.custom_id,
         message: 'Lead submitted successfully!'
       },
       { status: 201 }
@@ -82,11 +122,20 @@ export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmi
     console.error('API route error:', error);
     
     if (error instanceof z.ZodError) {
+      // Provide more specific error messages
+      const fieldErrors = error.issues.map((err: z.ZodIssue) => ({
+        field: err.path.join('.'),
+        message: err.message
+      }));
+      
+      const phoneError = fieldErrors.find((err: { field: string; message: string }) => err.field === 'whatsapp_number');
+      
       return NextResponse.json(
         {
           success: false,
           error: 'Validation failed',
-          message: 'Please check your form data and try again.'
+          message: phoneError ? phoneError.message : 'Please check your form data and try again.',
+          details: fieldErrors
         },
         { status: 400 }
       );

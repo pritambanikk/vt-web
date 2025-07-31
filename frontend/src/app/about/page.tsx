@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Target, Shield, Zap, Heart } from "lucide-react";
+import {  Target, Shield, Zap, Heart } from "lucide-react";
 import { AboutCTA } from "@/components/features/about/about-cta";
 import { generatePageMetadata } from "@/lib/seo";
 
@@ -31,57 +31,6 @@ export default function AboutPage() {
     }
   ];
 
-  const team = [
-    {
-      name: "Adv. Rajesh Kumar",
-      role: "Founder & Managing Partner",
-      expertise: "Corporate Law, Business Strategy",
-      experience: "15+ years",
-      description: "Former corporate lawyer with expertise in Indian business law and startup ecosystem."
-    },
-    {
-      name: "Adv. Priya Sharma",
-      role: "Head of Legal Operations",
-      expertise: "Contract Law, Compliance",
-      experience: "12+ years",
-      description: "Specializes in contract drafting and regulatory compliance for Indian businesses."
-    },
-    {
-      name: "Adv. Amit Patel",
-      role: "Senior Legal Counsel",
-      expertise: "Employment Law, HR",
-      experience: "10+ years",
-      description: "Expert in employment law and HR compliance for growing companies."
-    }
-  ];
-
-  const milestones = [
-    {
-      year: "2020",
-      title: "Founded",
-      description: "Started with a vision to democratize legal services for Indian SMEs"
-    },
-    {
-      year: "2021",
-      title: "First 50 Clients",
-      description: "Reached our first milestone serving 50 small and medium businesses"
-    },
-    {
-      year: "2022",
-      title: "Digital Platform",
-      description: "Launched our online platform for seamless legal service delivery"
-    },
-    {
-      year: "2023",
-      title: "150+ SMEs Served",
-      description: "Expanded our reach and helped over 150 Indian businesses"
-    },
-    {
-      year: "2024",
-      title: "Future Ready",
-      description: "Continuing to innovate and serve the evolving needs of Indian businesses"
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -97,41 +46,7 @@ export default function AboutPage() {
           </p>
         </section>
 
-        {/* Our Story */}
-        <section className="mb-16">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl font-bold mb-6 text-foreground">Our Story</h2>
-              <div className="space-y-4 text-muted-foreground">
-                <p>
-                  Founded in 2020, Vakil-Tech emerged from a simple observation: Indian small and 
-                  medium businesses were struggling to access quality legal services. Traditional 
-                  law firms were expensive, complex, and often intimidating for entrepreneurs.
-                </p>
-                <p>
-                  We set out to change this by creating a platform that combines traditional 
-                  legal expertise with modern technology. Our team of experienced lawyers 
-                  understands the unique challenges Indian businesses face and provides 
-                  solutions that actually work in our market.
-                </p>
-                <p>
-                  Today, we&apos;ve helped over 150 Indian businesses navigate legal challenges, 
-                  save on legal costs, and focus on what they do best - growing their business.
-                </p>
-              </div>
-            </div>
-            <div className="bg-muted/30 rounded-lg p-8">
-              <div className="text-center">
-                <div className="text-6xl mb-4">🏢</div>
-                <h3 className="text-2xl font-bold mb-4">Built for Indian Business Reality</h3>
-                <p className="text-muted-foreground">
-                  We understand the cultural nuances, regulatory environment, and business 
-                  challenges that are unique to the Indian market.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+ 
 
         {/* Our Values */}
         <section className="mb-16">

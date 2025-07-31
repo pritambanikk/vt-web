@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { LegalCTA } from "@/components/features/legal/legal-cta";
 import { generateLegalMetadata } from "@/lib/seo";
 
@@ -26,166 +26,155 @@ export default function PrivacyPolicyPage() {
 
         {/* Policy Content */}
         <section className="max-w-4xl mx-auto">
-          <div className="space-y-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>1. Information We Collect</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h3 className="font-semibold mb-2">Personal Information</h3>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="information-collection">
+              <AccordionTrigger className="text-left">
+                Information We Collect
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-4">
                   <p className="text-muted-foreground">
-                    We collect information you provide directly to us, such as when you:
+                    We may collect various types of information from users of our website and services, including:
                   </p>
-                  <ul className="list-disc list-inside text-muted-foreground mt-2 space-y-1">
-                    <li>Fill out our contact forms</li>
-                    <li>Book consultations</li>
-                    <li>Subscribe to our newsletter</li>
-                    <li>Request legal services</li>
-                  </ul>
+                  <div>
+                    <h3 className="font-semibold mb-2">Personal Information</h3>
+                    <p className="text-muted-foreground mb-2">
+                      When you register or use our services, we may collect personal information such as your name, email address, phone number, and other contact details.
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">Billing Information</h3>
+                    <p className="text-muted-foreground mb-2">
+                      If you make payments through our website, we may collect billing and payment information, including credit card details.
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">User-Generated Content</h3>
+                    <p className="text-muted-foreground mb-2">
+                      Information that you provide while using our services, such as messages, comments, and documents.
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">Device Information</h3>
+                    <p className="text-muted-foreground mb-2">
+                      We may collect information about the device you use to access our services, including device type, browser, IP address, and location data.
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">Usage Information</h3>
+                    <p className="text-muted-foreground mb-2">
+                      We collect information about your interactions with our website, such as pages visited, features used, and the date and time of visits.
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">Cookies and Tracking Technologies</h3>
+                    <p className="text-muted-foreground">
+                      We use cookies and similar technologies to collect data about your online behavior and preferences. You can manage your cookie preferences through your browser settings.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Information We Collect Automatically</h3>
-                  <p className="text-muted-foreground">
-                    We automatically collect certain information when you visit our website:
-                  </p>
-                  <ul className="list-disc list-inside text-muted-foreground mt-2 space-y-1">
-                    <li>IP address and browser type</li>
-                    <li>Pages visited and time spent</li>
-                    <li>Device information</li>
-                    <li>Cookies and similar technologies</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
+              </AccordionContent>
+            </AccordionItem>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>2. How We Use Your Information</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <AccordionItem value="how-we-use">
+              <AccordionTrigger className="text-left">
+                How We Use Your Information
+              </AccordionTrigger>
+              <AccordionContent>
                 <p className="text-muted-foreground mb-4">
-                  We use the information we collect to:
+                  We use your personal information for the following purposes:
                 </p>
                 <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                  <li>Provide and improve our legal services</li>
-                  <li>Communicate with you about your cases</li>
-                  <li>Send you updates and newsletters (with your consent)</li>
-                  <li>Analyze website usage and improve user experience</li>
-                  <li>Comply with legal obligations</li>
-                  <li>Protect against fraud and abuse</li>
+                  <li><strong>To Provide Services:</strong> To offer our legal services, connect clients with legal professionals, and facilitate communication.</li>
+                  <li><strong>Communication:</strong> To communicate with you, respond to inquiries, and provide updates about our services.</li>
+                  <li><strong>Billing and Payments:</strong> To process payments and maintain billing records.</li>
+                  <li><strong>User Experience:</strong> To personalize your experience and improve our website and services.</li>
+                  <li><strong>Legal Obligations:</strong> To comply with legal and regulatory requirements.</li>
+                  <li><strong>Marketing:</strong> With your consent, we may use your contact information for marketing purposes. You can opt out at any time.</li>
                 </ul>
-              </CardContent>
-            </Card>
+              </AccordionContent>
+            </AccordionItem>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>3. Information Sharing</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <AccordionItem value="disclosure">
+              <AccordionTrigger className="text-left">
+                Disclosure of Your Information
+              </AccordionTrigger>
+              <AccordionContent>
                 <p className="text-muted-foreground mb-4">
-                  We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:
+                  We may share your information with:
                 </p>
                 <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                  <li>With your explicit consent</li>
-                  <li>To comply with legal requirements</li>
-                  <li>To protect our rights and safety</li>
-                  <li>With service providers who assist in our operations</li>
+                  <li><strong>Legal Professionals:</strong> We may share your information with legal professionals when you seek their services through our platform.</li>
+                  <li><strong>Service Providers:</strong> We may use third-party service providers to assist with our operations, and we may share your information with them.</li>
+                  <li><strong>Legal Requirements:</strong> We may disclose information to comply with legal obligations or respond to lawful requests, including government authorities.</li>
+                  <li><strong>Business Transfers:</strong> In the event of a merger, acquisition, or sale of all or part of our assets, your information may be transferred as part of the transaction.</li>
                 </ul>
-              </CardContent>
-            </Card>
+              </AccordionContent>
+            </AccordionItem>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>4. Data Security</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <AccordionItem value="data-security">
+              <AccordionTrigger className="text-left">
+                Data Security
+              </AccordionTrigger>
+              <AccordionContent>
                 <p className="text-muted-foreground">
-                  We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. These measures include encryption, secure servers, and regular security assessments.
+                  We implement reasonable security measures to protect your personal information from unauthorized access, disclosure, alteration, and destruction. However, no method of transmission over the internet or electronic storage is entirely secure. Therefore, we cannot guarantee absolute security.
                 </p>
-              </CardContent>
-            </Card>
+              </AccordionContent>
+            </AccordionItem>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>5. Your Rights</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <AccordionItem value="your-choices">
+              <AccordionTrigger className="text-left">
+                Your Choices
+              </AccordionTrigger>
+              <AccordionContent>
                 <p className="text-muted-foreground mb-4">
-                  You have the right to:
+                  You have certain choices regarding your information:
                 </p>
                 <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                  <li>Access your personal information</li>
-                  <li>Correct inaccurate information</li>
-                  <li>Request deletion of your information</li>
-                  <li>Opt-out of marketing communications</li>
-                  <li>Withdraw consent at any time</li>
+                  <li><strong>Access and Update:</strong> You can access and update your personal information by logging into your account.</li>
+                  <li><strong>Marketing Communications:</strong> You can opt out of marketing communications at any time by following the unsubscribe instructions in the messages or by contacting us.</li>
+                  <li><strong>Cookies:</strong> You can manage cookie preferences through your browser settings.</li>
                 </ul>
-              </CardContent>
-            </Card>
+              </AccordionContent>
+            </AccordionItem>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>6. Cookies and Tracking</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <AccordionItem value="children-privacy">
+              <AccordionTrigger className="text-left">
+                Children&apos;s Privacy
+              </AccordionTrigger>
+              <AccordionContent>
+                <p className="text-muted-foreground">
+                  Our services are not intended for individuals under the age of 18. We do not knowingly collect information from children. If you are a parent or guardian and believe your child has provided us with information, please contact us, and we will take steps to delete the information.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="changes-policy">
+              <AccordionTrigger className="text-left">
+                Changes to this Policy
+              </AccordionTrigger>
+              <AccordionContent>
+                <p className="text-muted-foreground">
+                  We may update this Privacy Policy to reflect changes in our practices. We will post the revised policy with the effective date on this page.
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="contact-us">
+              <AccordionTrigger className="text-left">
+                Contact Us
+              </AccordionTrigger>
+              <AccordionContent>
                 <p className="text-muted-foreground mb-4">
-                  We use cookies and similar technologies to enhance your experience on our website. You can control cookie settings through your browser preferences.
-                </p>
-                <p className="text-muted-foreground">
-                  Essential cookies are required for website functionality and cannot be disabled.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>7. Third-Party Links</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Our website may contain links to third-party websites. We are not responsible for the privacy practices of these external sites. We encourage you to review their privacy policies.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>8. Children&apos;s Privacy</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Our services are not intended for children under 18. We do not knowingly collect personal information from children under 18. If you believe we have collected such information, please contact us immediately.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>9. Changes to This Policy</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  We may update this privacy policy from time to time. We will notify you of any material changes by posting the new policy on our website and updating the &quot;Last updated&quot; date.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>10. Contact Us</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  If you have any questions about this privacy policy or our data practices, please contact us:
+                  If you have questions or concerns about this Privacy Policy or our data practices, please contact us at:
                 </p>
                 <div className="space-y-2 text-muted-foreground">
-                  <p>Email: privacy@vakiltech.com</p>
-                  <p>Phone: +91 98765 43210</p>
+                  <p><strong>Email:</strong> help@vakil.tech</p>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </section>
 
         {/* CTA Section */}

@@ -3,10 +3,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { formElementVariants, staggerContainer } from '@/lib/animations';
 import { LeadFormData } from '@/types/lead-form';
-import { Pencil, CreditCard, Send } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { getPaymentConfig, formatAmount } from '@/lib/payment-config';
 import { useFormContext } from '@/contexts/form-context';
 

@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { validatePhoneNumber, PhoneValidationResult } from './phone-validation';
+import { CountryCode } from '@/data/indian-cities';
 
 // Step 1: Personal Details Validation
 export const personalDetailsSchema = z.object({
@@ -14,14 +16,28 @@ export const personalDetailsSchema = z.object({
     .trim(),
   whatsappNumber: z
     .string()
-    .regex(/^\+?[1-9]\d{1,14}$/, 'Please enter a valid phone number')
-    .trim(),
+    .min(1, 'Phone number is required')
+    .trim()
+    .refine((val) => {
+      // Basic format check - should start with + and contain digits
+      return /^\+\d{7,15}$/.test(val);
+    }, {
+      message: 'Please enter a valid phone number with country code',
+    }),
   whatsappConsent: z
     .boolean()
     .refine((val) => val === true, {
       message: 'You must consent to WhatsApp communication to proceed',
     }),
 });
+
+// Custom validation function for phone number with country code
+export const validatePhoneWithCountry = (
+  phoneNumber: string,
+  countryCode: CountryCode
+): PhoneValidationResult => {
+  return validatePhoneNumber(phoneNumber, countryCode);
+};
 
 // Step 2: Service Selection Validation
 export const serviceSelectionSchema = z.object({

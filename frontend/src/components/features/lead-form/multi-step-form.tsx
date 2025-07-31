@@ -99,8 +99,8 @@ export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-4 sm:space-y-6 overflow-y-hidden touch-manipulation">
-      <div className="min-h-[50svh] p-2 sm:min-h-[60dvh] max-h-[70svh] sm:max-h-[75dvh] overflow-y-auto touch-manipulation">
+    <div className="w-full max-w-2xl mx-auto h-full flex flex-col">
+      <div className="flex-1 overflow-y-auto touch-manipulation px-2 sm:px-4 form-scroll-container">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
@@ -109,7 +109,7 @@ export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
             animate="visible"
             exit="exit"
             transition={{ duration: 0.3 }}
-            className="w-full"
+            className="w-full py-4 pb-8"
           >
             {renderCurrentStep()}
           </motion.div>

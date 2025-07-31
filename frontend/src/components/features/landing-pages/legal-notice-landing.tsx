@@ -2,27 +2,53 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { WordRotate } from "@/components/ui/word-rotate";
+import { HeroBackground } from "@/components/ui/hero-background";
 import { useFormContext } from "@/contexts/form-context";
 import { SimpleProcess } from "../homepage/simple-process";
+import Image from "next/image";
 
 export function LegalNoticeLanding() {
   const { openForm } = useFormContext();
   
-  const features = [
+  const handleCallbackRequest = () => {
+    openForm('legal-notice');
+  };
+
+  const handleLearnMore = () => {
+    const processSection = document.getElementById('legal-process');
+    if (processSection) {
+      processSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const services = [
     {
-      title: "Payment Recovery",
-      description: "Professional legal notices to recover outstanding payments from clients and customers",
-      icon: "💰"
+      title: "Matrimonial Disputes",
+      description: "Professional legal support for matrimonial and family law matters",
+      image: "/legal-notice/matrimonial-disputes.png",
+      features: [
+        "Privacy Guaranteed",
+        "Pick a male or Female lawyer"
+      ]
     },
     {
-      title: "Contract Breaches", 
-      description: "Legal notices for contract violations and breach of agreement situations",
-      icon: "⚖️"
+      title: "Money Recovery",
+      description: "Effective legal solutions for recovering outstanding payments and debts",
+      image: "/legal-notice/marketing-software-feature-1.webp",
+      features: [
+        "Threaten Legal Action",
+        "Follow up on unpaid bills"
+      ]
     },
     {
-      title: "Compliance Issues",
-      description: "Notices addressing regulatory compliance and legal requirement violations",
-      icon: "📋"
+      title: "Consumer Disputes",
+      description: "Expert legal assistance for consumer rights and dispute resolution",
+      image: "/legal-notice/consumer-disputes.png",
+      features: [
+        "Seek Refund",
+        "Seek Compensation"
+      ]
     }
   ];
 
@@ -52,50 +78,86 @@ export function LegalNoticeLanding() {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Hero Section */}
-      <section className="text-center py-16 md:py-20">
-        <div className="max-w-4xl mx-auto">
+      <section className="relative text-center py-16 md:py-20 overflow-hidden">
+        <HeroBackground variant="legal" className="absolute inset-0" />
+        <div className="relative z-10 max-w-4xl mx-auto">
+          {/* Main Headline with Word Rotation */}
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
-            Professional <span className="text-primary/70">Legal Notices</span>
+            File a Legal Notice for <WordRotate className="text-primary" words={["Divorce", "Money Recovery", "Property Disputes", "Contract Breaches", "Employment Issues", "Business Disputes"]} />
           </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Expert legal notices for payment recovery, contract breaches, and compliance issues. 
-            Protect your business rights with professionally drafted legal communications.
+          
+          {/* Tagline */}
+          <p className="text-xl md:text-2xl font-semibold text-muted-foreground mb-6">
+            Send Legally Valid Notices in 24 Hours
           </p>
-          <div className="text-3xl font-bold text-primary mb-8">
-            Starting from ₹999
+          
+          {/* Description */}
+          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Get professionally drafted legal notices that comply with Indian law. Whether you need to recover money, 
+            resolve property disputes, or handle family matters - our expert lawyers ensure your notice is legally 
+            sound and effective. Fast, reliable, and court-ready.
+          </p>
+          
+          {/* Updated CTA */}
+          <div className="text-2xl font-bold text-primary mb-8">
+            Need Help with Legal Notice?
           </div>
-          <Button 
-            size="lg" 
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
-            onClick={() => openForm('legal-notice')}
-          >
-            Send Notice
-          </Button>
+          
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              size="lg" 
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
+              onClick={handleCallbackRequest}
+            >
+              Request Callback
+            </Button>
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="border-primary text-primary hover:bg-secondary px-8 py-3"
+              onClick={handleLearnMore}
+            >
+              Learn More
+            </Button>
+          </div>
         </div>
       </section>
 
-      {/* Service Details */}
+      {/* Most in Need Section */}
       <section className="py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-            Legal Notice Services
+            Most in need
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Comprehensive legal notice solutions tailored to your specific business needs
+            Thousands of Indians face on a regular basis
           </p>
         </div>
         
         <div className="grid md:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
+          {services.map((service, index) => (
             <Card key={index} className="text-center hover:shadow-lg transition-all duration-300">
               <CardHeader>
-                <div className="w-16 h-16 bg-secondary rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">{feature.icon}</span>
+                <div className="w-32 h-32 mx-auto mb-4 relative">
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    className="object-contain"
+                  />
                 </div>
-                <CardTitle className="text-xl">{feature.title}</CardTitle>
+                <CardTitle className="text-xl mb-4">{service.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">{feature.description}</p>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  {service.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-center justify-center">
+                      <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
           ))}
@@ -103,21 +165,47 @@ export function LegalNoticeLanding() {
       </section>
 
       {/* 4-Step Process */}
-      <SimpleProcess
-        title="Simple 4-Step Process"
-        subtitle="Professional legal notice service designed for simplicity and effectiveness"
-        steps={processSteps}
-      />
+      <section id="legal-process" className="py-16">
+        <SimpleProcess
+          title="Simple 4-Step Process"
+          subtitle="Professional legal notice service designed for simplicity and effectiveness"
+          steps={processSteps}
+        />
+        <div className="mx-auto text-center">
+
+          <Button 
+            size="lg" 
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg"
+            onClick={handleCallbackRequest}
+          >
+            Start Your Legal Notice Now
+          </Button>
+          </div>
+        
+        {/* Primary CTA after process explanation */}
+        {/* <div className="text-center mt-12">
+          <h3 className="text-2xl md:text-3xl font-bold mb-4 text-foreground">
+            Ready to Get Started?
+          </h3>
+          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Connect with our legal experts today and get your professional legal notice in 24 hours
+          </p>
+          <Button 
+            size="lg" 
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg"
+            onClick={handleCallbackRequest}
+          >
+            Start Your Legal Notice Now
+          </Button>
+        </div> */}
+      </section>
 <br />
       {/* Pricing & Value Proposition */}
       <section className="py-16 bg-card border rounded-lg">
         <div className="text-center max-w-4xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-foreground">
-            Transparent Pricing
+           Why Choose Us?
           </h2>
-          <div className="text-4xl font-bold text-primary mb-8">
-            Starting from ₹999
-          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <div className="flex items-center">
               <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
@@ -147,41 +235,7 @@ export function LegalNoticeLanding() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 text-center">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">
-            Ready to Send Your Legal Notice?
-          </h2>
-          <p className="text-lg text-muted-foreground mb-8">
-            Get started with a professional legal notice today. Our experts will help you 
-            draft the perfect notice for your situation.
-          </p>
-          <div className="space-x-4">
-            <Button 
-              size="lg" 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
-              onClick={() => openForm('legal-notice')}
-            >
-              Send Notice
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="border-primary text-primary hover:bg-secondary px-8 py-3"
-              onClick={() => {
-                // Expand service details or show FAQ
-                const serviceDetails = document.getElementById('service-details');
-                if (serviceDetails) {
-                  serviceDetails.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            >
-              Learn More
-            </Button>
-          </div>
-        </div>
-      </section>
+
     </div>
   );
 } 

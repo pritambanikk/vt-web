@@ -82,13 +82,13 @@ export const WhatsNextStep = ({ formData, onComplete, leadId, submissionSuccess 
           <p className="text-base font-medium">Thank you, {formData.name}!</p>
           {formData.paymentSuccess ? (
             <p className="text-sm text-muted-foreground">
-              Your lead has been successfully submitted and payment completed! (ID: {leadId})<br />
+              Your lead has been successfully submitted and payment completed! (ID: {formData.customId || leadId})<br />
               Payment ID: {formData.paymentId}<br />
               Our team will review your request and reach out on WhatsApp soon.
             </p>
           ) : submissionSuccess ? (
             <p className="text-sm text-muted-foreground">
-              Your lead has been successfully submitted! (ID: {leadId})<br />
+              Your lead has been successfully submitted! (ID: {formData.customId || leadId})<br />
               Our team will review your request and reach out on WhatsApp soon.<br />
               To get started faster, pay a <span className="font-semibold text-primary">{getPaymentAmount()} advance</span> now.
             </p>

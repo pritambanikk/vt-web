@@ -8,9 +8,10 @@ import { Label } from '@/components/ui/label';
 import { SimpleCombobox } from '@/components/ui/simple-combobox';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { personalDetailsSchema, PersonalDetailsFormData } from '@/lib/validators/lead-form';
+import { personalDetailsSchema, PersonalDetailsFormData, validatePhoneWithCountry } from '@/lib/validators/lead-form';
 import { formElementVariants, staggerContainer } from '@/lib/animations';
 import { indianCities, IndianCity, countryCodes, CountryCode, defaultCountryCode } from '@/data/indian-cities';
+import { getPhoneNumberExample, getPhoneNumberPlaceholder } from '@/lib/validators/phone-validation';
 import { useState, useEffect } from 'react';
 
 interface PersonalDetailsStepProps {
@@ -26,6 +27,9 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
   const [cityOptions, setCityOptions] = useState<{ value: string; label: string }[]>([]);
   const [selectedCountryCode, setSelectedCountryCode] = useState<CountryCode>(defaultCountryCode);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [phoneValidationError, setPhoneValidationError] = useState<string>('');
+  const [phoneExample, setPhoneExample] = useState<string>(getPhoneNumberExample(defaultCountryCode));
+  const [phonePlaceholder, setPhonePlaceholder] = useState<string>(getPhoneNumberPlaceholder(defaultCountryCode));
 
   const {
     register,
@@ -56,6 +60,22 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
     setFilteredCities(indianCities);
   }, []);
 
+  // Initialize phone number from initialData if it exists
+  useEffect(() => {
+    if (initialData?.whatsappNumber) {
+      const fullNumber = initialData.whatsappNumber;
+      // Extract country code and phone number
+      const country = countryCodes.find(c => fullNumber.startsWith(c.dialCode));
+      if (country) {
+        setSelectedCountryCode(country);
+        const phoneOnly = fullNumber.replace(country.dialCode, '');
+        setPhoneNumber(phoneOnly);
+        setPhoneExample(getPhoneNumberExample(country));
+        setPhonePlaceholder(getPhoneNumberPlaceholder(country));
+      }
+    }
+  }, [initialData?.whatsappNumber]);
+
   // Handle city selection
   const handleCitySelect = (cityDisplayName: string) => {
     setSelectedCity(cityDisplayName);
@@ -75,11 +95,31 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
   };
 
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    let value = e.target.value;
+    
+    // Remove country code if user enters it manually
+    countryCodes.forEach(country => {
+      if (value.startsWith(country.dialCode)) {
+        value = value.replace(country.dialCode, '');
+      }
+    });
+    
+    // Remove any non-digit characters except for the country code
+    value = value.replace(/\D/g, '');
+    
     setPhoneNumber(value);
-    const fullNumber = selectedCountryCode.dialCode + value;
-    setValue('whatsappNumber', fullNumber, { shouldValidate: true });
-    onDataUpdate?.({ whatsappNumber: fullNumber });
+    
+    // Validate phone number
+    const validation = validatePhoneWithCountry(value, selectedCountryCode);
+    setPhoneValidationError(validation.error || '');
+    
+    if (validation.isValid && validation.formattedNumber) {
+      setValue('whatsappNumber', validation.formattedNumber, { shouldValidate: true });
+      onDataUpdate?.({ whatsappNumber: validation.formattedNumber });
+    } else {
+      setValue('whatsappNumber', selectedCountryCode.dialCode + value, { shouldValidate: true });
+      onDataUpdate?.({ whatsappNumber: selectedCountryCode.dialCode + value });
+    }
   };
 
   const handleCountryCodeChange = (value: string) => {
@@ -87,9 +127,24 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
     const country = countryCodes.find(c => c.code === countryCode && c.dialCode === dialCode);
     if (country) {
       setSelectedCountryCode(country);
-      const fullNumber = country.dialCode + phoneNumber;
-      setValue('whatsappNumber', fullNumber, { shouldValidate: true });
-      onDataUpdate?.({ whatsappNumber: fullNumber });
+      
+      // Update phone example and placeholder for new country
+      setPhoneExample(getPhoneNumberExample(country));
+      setPhonePlaceholder(getPhoneNumberPlaceholder(country));
+      
+      // Re-validate phone number with new country code
+      if (phoneNumber) {
+        const validation = validatePhoneWithCountry(phoneNumber, country);
+        setPhoneValidationError(validation.error || '');
+        
+        if (validation.isValid && validation.formattedNumber) {
+          setValue('whatsappNumber', validation.formattedNumber, { shouldValidate: true });
+          onDataUpdate?.({ whatsappNumber: validation.formattedNumber });
+        } else {
+          setValue('whatsappNumber', country.dialCode + phoneNumber, { shouldValidate: true });
+          onDataUpdate?.({ whatsappNumber: country.dialCode + phoneNumber });
+        }
+      }
     }
   };
 
@@ -100,7 +155,7 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
       animate="visible"
       className="space-y-6"
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 overflow-y-auto">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <motion.div variants={formElementVariants} className="space-y-2">
           <Label htmlFor="name">Full Name *</Label>
           <Input
@@ -181,14 +236,14 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
             <Input
               id="whatsappNumber"
               type="tel"
-              placeholder="98765 43210"
-              className="flex-1"
+              placeholder={phonePlaceholder}
+              className={`flex-1 ${phoneValidationError || errors.whatsappNumber ? 'border-destructive' : phoneNumber && !phoneValidationError ? 'border-green-500' : ''}`}
               value={phoneNumber}
               onChange={handlePhoneNumberChange}
-              aria-describedby={errors.whatsappNumber ? 'whatsapp-error' : undefined}
+              aria-describedby={phoneValidationError || errors.whatsappNumber ? 'whatsapp-error' : undefined}
             />
           </div>
-          {errors.whatsappNumber && (
+          {(phoneValidationError || errors.whatsappNumber) && (
             <motion.p
               id="whatsapp-error"
               className="text-sm text-destructive"
@@ -196,9 +251,22 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
               initial="hidden"
               animate="visible"
             >
-              {errors.whatsappNumber.message}
+              {phoneValidationError || errors.whatsappNumber?.message}
             </motion.p>
           )}
+          {phoneNumber && !phoneValidationError && !errors.whatsappNumber && (
+            <motion.p
+              className="text-sm text-green-600"
+              variants={formElementVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              ✓ Valid phone number
+            </motion.p>
+          )}
+          <p className="text-xs text-muted-foreground">
+            Example: {phoneExample}
+          </p>
         </motion.div>
 
         <motion.div variants={formElementVariants} className="space-y-3">

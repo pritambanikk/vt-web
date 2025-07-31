@@ -188,14 +188,8 @@ function Footerdemo() {
             <a href="/privacy-policy" className="transition-colors hover:text-primary">
               Privacy Policy
             </a>
-            <a href="/terms-of-service" className="transition-colors hover:text-primary">
-              Terms of Service
-            </a>
-            <a href="#" className="transition-colors hover:text-primary" onClick={() => {
-              // Simple cookie settings toggle - in a real app, this would open a modal
-              alert('Cookie settings would open here. For now, cookies are enabled for essential functionality.');
-            }}>
-              Cookie Settings
+            <a href="/terms-and-conditions" className="transition-colors hover:text-primary">
+              Terms and Conditions
             </a>
           </nav>
         </div>

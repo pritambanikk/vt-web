@@ -16,6 +16,7 @@ export interface LeadSubmissionRequest {
 export interface LeadSubmissionResponse {
   success: boolean;
   leadId?: string;
+  customId?: string;
   error?: string;
   message?: string;
 }
