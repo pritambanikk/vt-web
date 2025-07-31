@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { PricingCards } from "@/components/features/pricing/pricing-cards";
 import { PricingCTA } from "@/components/features/pricing/pricing-cta";
 import { generatePageMetadata } from "@/lib/seo";
@@ -6,10 +7,18 @@ import { generatePageMetadata } from "@/lib/seo";
 export const metadata: Metadata = generatePageMetadata('pricing');
 
 export default function PricingPage() {
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Pricing", current: true }
+  ];
 
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-16">
+        {/* Breadcrumb Navigation */}
+        <div className="mb-8">
+          <Breadcrumb items={breadcrumbItems} />
+        </div>
         {/* Hero Section */}
         <section className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">

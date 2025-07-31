@@ -147,7 +147,7 @@ export function generateServiceMetadata(
 
 // Helper function to generate metadata for legal pages
 export function generateLegalMetadata(
-  page: 'terms-of-service' | 'privacy-policy' | 'terms-and-conditions',
+  page: 'terms-of-service' | 'privacy-policy' | 'terms-and-conditions' | 'terms-of-use',
   customTitle?: string,
   customDescription?: string
 ): Metadata {
@@ -166,6 +166,11 @@ export function generateLegalMetadata(
       title: 'Terms and Conditions',
       description: 'Terms and Conditions for Vakil Tech legal services platform.',
       keywords: ['terms and conditions', 'legal terms', 'service agreement'],
+    },
+    'terms-of-use': {
+      title: 'Terms of Use',
+      description: 'Terms of Use and Disclaimer for Vakil Tech legal services platform.',
+      keywords: ['terms of use', 'disclaimer', 'legal terms', 'platform terms'],
     },
   };
 

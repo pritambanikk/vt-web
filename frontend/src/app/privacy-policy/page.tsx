@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { LegalCTA } from "@/components/features/legal/legal-cta";
 import { generateLegalMetadata } from "@/lib/seo";
@@ -8,9 +9,18 @@ export const metadata: Metadata = generateLegalMetadata('privacy-policy');
 export default function PrivacyPolicyPage() {
   const currentDate = new Date().toLocaleDateString();
   
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Privacy Policy", current: true }
+  ];
+  
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-16">
+        {/* Breadcrumb Navigation */}
+        <div className="mb-8">
+          <Breadcrumb items={breadcrumbItems} />
+        </div>
         {/* Hero Section */}
         <section className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">

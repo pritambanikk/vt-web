@@ -48,7 +48,7 @@ module.exports = {
     }
     
     // Legal pages get medium priority
-    else if (['/terms-of-service', '/privacy-policy'].includes(path)) {
+    else if (['/terms-of-service', '/privacy-policy', '/terms-and-conditions', '/terms-of-use'].includes(path)) {
       priority = 0.5;
       changefreq = 'monthly';
     }

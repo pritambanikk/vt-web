@@ -14,11 +14,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Facebook, Instagram, Linkedin, Moon, Send, Sun, Twitter } from "lucide-react"
-
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 function Footerdemo() {
+  const router = useRouter()
   const [isDarkMode, setIsDarkMode] = React.useState(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isChatOpen, setIsChatOpen] = React.useState(false)
 
   React.useEffect(() => {
     if (isDarkMode) {
@@ -33,9 +35,13 @@ function Footerdemo() {
       <div className="container mx-auto px-4 py-12 md:px-6 lg:px-8">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="relative">
-            <h2 className="mb-4 text-3xl font-bold tracking-tight">Vakil Tech</h2>
+            <div className="mb-4">
+              <Image src="/logo.png" alt="Vakil Tech" width={120} height={120} className="dark:bg-white dark:p-2 dark:rounded-lg dark:shadow-md" />
+            </div>
             <p className="mb-6 text-muted-foreground">
-              Professional legal services and consultation platform. Stay updated with legal insights and exclusive offers.
+              VakilTech connects legal professionals and clients, serving as a service aggregator to foster communication.
+               We are not agents for lawyers; our role is to facilitate connections between lawyers and clients.
+              You can <span className="text-primary cursor-pointer" onClick={() => router.push('/terms-of-use')}> read more here.</span>  
             </p>
             <form className="relative" onSubmit={(e) => {
               e.preventDefault();
@@ -85,7 +91,7 @@ function Footerdemo() {
           <div>
             <h3 className="mb-4 text-lg font-semibold">Contact Us</h3>
             <address className="space-y-2 text-sm not-italic">
-              <p>Vakil Tech Legal Services</p>
+              <p>VakilTech Legal Services</p>
               <p>Phone: +91 98765 43210</p>
               <p>Email: contact@vakiltech.com</p>
             </address>
@@ -182,7 +188,7 @@ function Footerdemo() {
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row">
           <p className="text-sm text-muted-foreground">
-            © 2024 Vakil Tech. All rights reserved.
+            © 2024 VakilTech. All rights reserved.
           </p>
           <nav className="flex gap-4 text-sm">
             <a href="/privacy-policy" className="transition-colors hover:text-primary">
@@ -190,6 +196,9 @@ function Footerdemo() {
             </a>
             <a href="/terms-and-conditions" className="transition-colors hover:text-primary">
               Terms and Conditions
+            </a>
+            <a href="/terms-of-use" className="transition-colors hover:text-primary">
+              Terms of Use
             </a>
           </nav>
         </div>
