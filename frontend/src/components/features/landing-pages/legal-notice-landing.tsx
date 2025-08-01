@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WordRotate } from "@/components/ui/word-rotate";
-import { HeroBackground } from "@/components/ui/hero-background";
 import { useFormContext } from "@/contexts/form-context";
 import { SimpleProcess } from "../homepage/simple-process";
 import Image from "next/image";
@@ -15,12 +14,6 @@ export function LegalNoticeLanding() {
     openForm('legal-notice');
   };
 
-  const handleLearnMore = () => {
-    const processSection = document.getElementById('legal-process');
-    if (processSection) {
-      processSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   const services = [
     {
@@ -79,7 +72,16 @@ export function LegalNoticeLanding() {
     <div className="container mx-auto px-4 py-8">
       {/* Hero Section */}
       <section className="relative text-center py-16 md:py-20 overflow-hidden">
-        <HeroBackground variant="legal" className="absolute inset-0" />
+        {/* Animated Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/10 to-primary/5 animate-pulse"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/3 to-transparent animate-pulse" style={{ animationDelay: '1s', animationDuration: '3s' }}></div>
+        <div className="absolute inset-0 bg-gradient-to-bl from-secondary/5 via-transparent to-primary/3 animate-pulse" style={{ animationDelay: '2s', animationDuration: '4s' }}></div>
+        
+        {/* Floating Elements */}
+        <div className="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-xl animate-bounce" style={{ animationDelay: '0.5s', animationDuration: '6s' }}></div>
+        <div className="absolute bottom-20 right-10 w-24 h-24 bg-secondary/10 rounded-full blur-xl animate-bounce" style={{ animationDelay: '1.5s', animationDuration: '5s' }}></div>
+        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-primary/5 rounded-full blur-lg animate-pulse" style={{ animationDelay: '2.5s', animationDuration: '7s' }}></div>
+        
         <div className="relative z-10 max-w-4xl mx-auto">
           {/* Main Headline with Word Rotation */}
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
@@ -87,40 +89,47 @@ export function LegalNoticeLanding() {
           </h1>
           
           {/* Tagline */}
-          <p className="text-xl md:text-2xl font-semibold text-muted-foreground mb-6">
+          <p className="text-md md:text-xl font-semibold text-muted-foreground mb-6">
             Send Legally Valid Notices in 24 Hours
           </p>
           
-          {/* Description */}
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Get professionally drafted legal notices that comply with Indian law. Whether you need to recover money, 
-            resolve property disputes, or handle family matters - our expert lawyers ensure your notice is legally 
-            sound and effective. Fast, reliable, and court-ready.
-          </p>
           
-          {/* Updated CTA */}
-          <div className="text-2xl font-bold text-primary mb-8">
-            Need Help with Legal Notice?
+          {/* Image with Integrated CTA */}
+          <div className="relative mb-8 max-w-md mx-auto">
+            <div className="relative w-full h-80 rounded-2xl overflow-hidden shadow-2xl">
+              {/* Image Container with Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-secondary/20 rounded-2xl"></div>
+              <Image
+                src="/legal-notice/request-a-callback.png"
+                alt="Legal Notice Consultation"
+                fill
+                className="object-contain p-4"
+                priority
+              />
+              
+              {/* Floating Call-to-Action Card */}
+              <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-primary/20">
+                <div className="text-center">
+                  <h3 className="text-lg font-bold text-primary mb-2">
+                    Need Help with Legal Notice?
+                  </h3>
+                  <Button 
+                    size="sm" 
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground w-full"
+                    onClick={handleCallbackRequest}
+                  >
+                    Request Callback
+                  </Button>
+                </div>
+              </div>
+            </div>
+            
+            {/* Decorative Elements */}
+            <div className="absolute -top-4 -right-4 w-8 h-8 bg-primary/20 rounded-full animate-pulse"></div>
+            <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-secondary/20 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
           </div>
           
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
-              onClick={handleCallbackRequest}
-            >
-              Request Callback
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="border-primary text-primary hover:bg-secondary px-8 py-3"
-              onClick={handleLearnMore}
-            >
-              Learn More
-            </Button>
-          </div>
         </div>
       </section>
 
