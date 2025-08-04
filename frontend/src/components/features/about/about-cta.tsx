@@ -1,10 +1,8 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { useFormContext } from "@/contexts/form-context";
 
 export function AboutCTA() {
-  const { openForm } = useFormContext();
 
   return (
     <section className="text-center">

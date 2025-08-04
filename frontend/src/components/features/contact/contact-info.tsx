@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFormContext } from "@/contexts/form-context";
-import { Mail, Phone,  Clock } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 
 export function ContactInfo() {
   const { openForm } = useFormContext();

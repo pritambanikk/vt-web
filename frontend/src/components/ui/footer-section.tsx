@@ -2,25 +2,20 @@
 
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Textarea } from "@/components/ui/textarea"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Facebook, Instagram, Linkedin, Moon, Send, Sun, Twitter, Mail } from "lucide-react"
+import { Facebook, Instagram, Linkedin, Moon, Sun, Mail } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
 function Footerdemo() {
   const router = useRouter()
   const [isDarkMode, setIsDarkMode] = React.useState(false)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   React.useEffect(() => {
     if (isDarkMode) {

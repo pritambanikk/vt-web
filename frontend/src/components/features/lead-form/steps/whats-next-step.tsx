@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle2, PartyPopper, XCircle, AlertCircle, CreditCard } from 'lucide-react';
+import { CheckCircle2, PartyPopper, XCircle, AlertCircle } from 'lucide-react';
 import { LeadFormData } from '@/types/lead-form';
 import { getPaymentConfig, formatAmount } from '@/lib/payment-config';
 import { useAnalytics } from '@/hooks/use-analytics';
@@ -16,8 +16,7 @@ interface WhatsNextStepProps {
 
 export const WhatsNextStep = ({ 
   formData, 
-  leadId, 
-  submissionSuccess
+  leadId
 }: WhatsNextStepProps) => {
   const { logEvent } = useAnalytics();
   const { paymentStatus } = useFormContext();
@@ -72,7 +71,7 @@ export const WhatsNextStep = ({
                 <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
                   <p className="text-sm text-green-700">
                     <strong>What happens next?</strong><br />
-                    1. You'll receive a confirmation SMS/WhatsApp<br />
+                    1. You&apos;ll receive a confirmation SMS/WhatsApp<br />
                     2. Our legal team will review your case<br />
                     3. A dedicated lawyer will contact you within 2-4 hours<br />
                     4. Your case will be prioritized for faster resolution
@@ -102,7 +101,7 @@ export const WhatsNextStep = ({
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 text-center">
-                <p className="text-base font-medium">Don't worry, {formData.name}!</p>
+                <p className="text-base font-medium">Don&apos;t worry, {formData.name}!</p>
                 <p className="text-sm text-muted-foreground">
                   Your ticket has been submitted successfully! (ID: {formData.customId || leadId})<br />
                   However, the payment was not completed.<br />
@@ -144,8 +143,8 @@ export const WhatsNextStep = ({
               <CardContent className="space-y-3 text-center">
                 <p className="text-base font-medium">Please wait, {formData.name}!</p>
                 <p className="text-sm text-muted-foreground">
-                  We're processing your payment of <span className="font-semibold text-blue-600">{getPaymentAmount()}</span>.<br />
-                  This may take a few moments. Please don't close this window.
+                  We&apos;re processing your payment of <span className="font-semibold text-blue-600">{getPaymentAmount()}</span>.<br />
+                  This may take a few moments. Please don&apos;t close this window.
                 </p>
                 <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
                   <p className="text-sm text-blue-700">

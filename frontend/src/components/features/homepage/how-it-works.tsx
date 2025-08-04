@@ -29,7 +29,7 @@ export function HowItWorksSection() {
       <div className="container mx-auto px-4">
         <SimpleProcess
           title="Simple 4-Step Process"
-          subtitle="Getting legal help for your Indian business has never been easier. Our transparent process ensures you know exactly what to expect."
+          subtitle="Getting legal help has never been easier. Our transparent process ensures you know exactly what to expect."
           steps={steps}
         />
         

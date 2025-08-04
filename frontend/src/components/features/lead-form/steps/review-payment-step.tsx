@@ -24,7 +24,7 @@ export const ReviewPaymentStep = ({
   formData, 
   onEditPersonalDetails
 }: ReviewPaymentStepProps) => {
-  const { submitForm, processPayment, isSubmitting, isProcessingPayment, submissionError, paymentError } = useFormContext();
+  const { submissionError, paymentError } = useFormContext();
   
   // Fallbacks for required fields
   const name = formData.name || '';

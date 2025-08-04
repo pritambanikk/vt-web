@@ -21,7 +21,7 @@ export function SimpleProcess({ title, subtitle, steps, className = "" }: Simple
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   return (
-    <section ref={sectionRef} className={`py-16 bg-card border rounded-lg ${className}`}>
+    <section ref={sectionRef} className={`p-8 bg-card border rounded-lg ${className}`}>
       <div className="text-center mb-12">
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
           {title}
