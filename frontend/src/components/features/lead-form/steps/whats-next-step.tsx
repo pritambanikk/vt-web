@@ -82,19 +82,19 @@ export const WhatsNextStep = ({ formData, onComplete, leadId, submissionSuccess 
           <p className="text-base font-medium">Thank you, {formData.name}!</p>
           {formData.paymentSuccess ? (
             <p className="text-sm text-muted-foreground">
-              Your lead has been successfully submitted and payment completed! (ID: {formData.customId || leadId})<br />
+              Your request has been successfully submitted and payment has been received! (ID: {formData.customId || leadId})<br />
               Payment ID: {formData.paymentId}<br />
-              Our team will review your request and reach out on WhatsApp soon.
+              One of our associates will reach out to you shortly.
             </p>
           ) : submissionSuccess ? (
             <p className="text-sm text-muted-foreground">
-              Your lead has been successfully submitted! (ID: {formData.customId || leadId})<br />
-              Our team will review your request and reach out on WhatsApp soon.<br />
+              Your request has been successfully submitted! (ID: {formData.customId || leadId})<br />
+              One of our associates will reach out to you shortly.<br />
               To get started faster, pay a <span className="font-semibold text-primary">{getPaymentAmount()} advance</span> now.
             </p>
           ) : (
             <p className="text-sm text-muted-foreground">
-              Our team will review your request and reach out on WhatsApp soon.<br />
+              One of our associates will reach out to you shortly.<br />
               To get started faster, pay a <span className="font-semibold text-primary">{getPaymentAmount()} advance</span> now.
             </p>
           )}

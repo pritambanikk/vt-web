@@ -153,7 +153,7 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
-      className="space-y-6"
+      className="space-y-4 sm:space-y-6"
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <motion.div variants={formElementVariants} className="space-y-2">
@@ -270,25 +270,26 @@ export const PersonalDetailsStep = ({ initialData, onNext, onDataUpdate, setIsSt
         </motion.div>
 
         <motion.div variants={formElementVariants} className="space-y-3">
-          <div className="flex items-start space-x-2">
-            <Checkbox
-              id="whatsappConsent"
-              defaultChecked={true}
-              {...register('whatsappConsent')}
-              onCheckedChange={(checked) => {
-                setValue('whatsappConsent', checked as boolean, { shouldValidate: true });
-                onDataUpdate?.({ whatsappConsent: checked as boolean });
-              }}
-              className="mt-0.5"
-            />
-            <div className="space-y-1">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 mt-0.5">
+              <Checkbox
+                id="whatsappConsent"
+                defaultChecked={true}
+                {...register('whatsappConsent')}
+                onCheckedChange={(checked) => {
+                  setValue('whatsappConsent', checked as boolean, { shouldValidate: true });
+                  onDataUpdate?.({ whatsappConsent: checked as boolean });
+                }}
+              />
+            </div>
+            <div className="flex-1 space-y-1">
               <Label
                 htmlFor="whatsappConsent"
-                className="text-sm font-normal leading-relaxed cursor-pointer"
+                className="text-sm font-normal leading-relaxed cursor-pointer block"
               >
                 I consent to receiving communication via WhatsApp *
               </Label>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 By checking this box, you agree to receive updates, legal advice, and payment details through WhatsApp at the number provided above.
               </p>
             </div>

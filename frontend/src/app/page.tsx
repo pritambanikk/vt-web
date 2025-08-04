@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background max-w-screen-2xl mx-auto overflow-x-hidden">
       {/* Hero Section */}
       <HeroSection />
       

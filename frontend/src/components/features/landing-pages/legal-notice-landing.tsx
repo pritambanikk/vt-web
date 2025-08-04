@@ -69,7 +69,7 @@ export function LegalNoticeLanding() {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-2 md:py-8">
       {/* Hero Section */}
       <section className="relative text-center py-16 md:py-20 overflow-hidden">
         {/* Animated Gradient Background */}
@@ -179,15 +179,16 @@ export function LegalNoticeLanding() {
           title="Simple 4-Step Process"
           subtitle="Professional legal notice service designed for simplicity and effectiveness"
           steps={processSteps}
+          className="border-0 shadow shadow-primary border-b-2 border-primary"
         />
         <div className="mx-auto text-center">
 
           <Button 
             size="lg" 
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg mt-2"
             onClick={handleCallbackRequest}
           >
-            Start Your Legal Notice Now
+            Raise a Request
           </Button>
           </div>
         

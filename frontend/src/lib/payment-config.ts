@@ -28,25 +28,25 @@ export interface PaymentVerificationResponse {
 export const PAYMENT_CONFIG: Record<string, PaymentConfig> = {
   'legal-notice': {
     service: 'legal-notice',
-    amount: 99900, // ₹999 in paise (Razorpay expects amount in paise)
+    amount: 49900, // ₹499 in paise (Razorpay expects amount in paise)
     currency: 'INR',
     description: 'Legal Notice Service - Advance Payment'
   },
   'consultation': {
     service: 'consultation',
-    amount: 149900, // ₹1,499 in paise
+    amount: 29900, // ₹299 in paise
     currency: 'INR',
     description: 'Legal Consultation Service - Advance Payment'
   },
   'document-drafting': {
     service: 'document-drafting',
-    amount: 249900, // ₹2,499 in paise
+    amount: 29900, // ₹299 in paise
     currency: 'INR',
     description: 'Document Drafting Service - Advance Payment'
   },
   'corporate-retainer': {
     service: 'corporate-retainer',
-    amount: 999900, // ₹9,999 in paise
+    amount: 0, // ₹0 in paise
     currency: 'INR',
     description: 'Corporate Retainer Service - Advance Payment'
   }

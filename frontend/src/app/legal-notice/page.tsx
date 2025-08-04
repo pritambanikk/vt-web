@@ -16,7 +16,7 @@ export default function LegalNoticePage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-background/55">
       {/* Breadcrumb Navigation */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 pt-8">
         <Breadcrumb items={breadcrumbItems} />
       </div>
       <LegalNoticeLanding />

@@ -210,3 +210,38 @@
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
 }
+
+/* Mobile-optimized combobox styles */
+@media (max-width: 768px) {
+  /* Ensure dropdown doesn't go off-screen */
+  .relative .absolute {
+    max-width: calc(100vw - 2rem);
+    left: 0 !important;
+    right: 0 !important;
+  }
+  
+  /* Improve touch targets */
+  button[type="button"] {
+    min-height: 44px;
+  }
+  
+  /* Prevent zoom on input focus */
+  input[type="text"] {
+    font-size: 16px !important;
+  }
+}
+
+/* Combobox specific styles */
+.simple-combobox-dropdown {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  background: hsl(var(--background));
+}
+
+/* Prevent body scroll when combobox is open */
+body.combobox-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}

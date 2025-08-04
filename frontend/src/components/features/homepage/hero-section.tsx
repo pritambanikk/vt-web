@@ -44,7 +44,7 @@ export function HeroSection() {
             className="bg-primary hover:bg-primary/90 text-primary-foreground"
             onClick={handleGetStarted}
           >
-            Get Free Legal Consultation
+           Talk to a Lawyer
           </Button>
           <Button 
             size="lg" 
