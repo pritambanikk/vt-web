@@ -21,12 +21,6 @@ export function ContactInfo() {
       details: ["help@vakiltech.com", "support@vakiltech.com"],
       action: "Email us"
     },
-    {
-      icon: <Clock className="h-6 w-6" />,
-      title: "Business Hours",
-      details: ["Mon - Fri: 9:00 AM - 6:00 PM", "Sat: 10:00 AM - 2:00 PM"],
-      action: "Book consultation"
-    }
   ];
 
   return (

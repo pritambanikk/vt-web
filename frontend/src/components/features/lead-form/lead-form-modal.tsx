@@ -11,8 +11,17 @@ import {
 import { MultiStepForm } from './multi-step-form';
 import { ProgressIndicator } from './progress-indicator';
 import { useFormContext } from '@/contexts/form-context';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CreditCard, AlertTriangle } from 'lucide-react';
 import { useState } from 'react';
+import { getPaymentConfig, formatAmount } from '@/lib/payment-config';
+import {
+  Dialog as ConfirmDialog,
+  DialogContent as ConfirmDialogContent,
+  DialogDescription,
+  DialogFooter as ConfirmDialogFooter,
+  DialogHeader as ConfirmDialogHeader,
+  DialogTitle as ConfirmDialogTitle,
+} from '@/components/ui/dialog';
 
 export const LeadFormModal = () => {
   const { 
@@ -23,10 +32,14 @@ export const LeadFormModal = () => {
     closeForm, 
     isSubmitting, 
     submitForm, 
-    submissionError 
+    submissionError,
+    formData,
+    processPayment,
+    isProcessingPayment
   } = useFormContext();
 
   const [isStepValid, setIsStepValid] = useState(false);
+  const [showCloseConfirmation, setShowCloseConfirmation] = useState(false);
 
   const getStepTitle = () => {
     switch (currentStep) {
@@ -65,91 +78,167 @@ export const LeadFormModal = () => {
     { id: 4, title: "What's Next", description: 'Next steps' },
   ];
 
-  return (
-    <AnimatePresence>
-      {isFormOpen && (
-        <Dialog open={isFormOpen} onOpenChange={closeForm}>
-          <DialogContent className="w-[95vw] max-w-4xl h-[90svh] sm:h-[95dvh] max-h-[90svh] sm:max-h-[95dvh] flex flex-col p-0 mx-auto overflow-hidden touch-manipulation form-scroll-container">
-            {/* Fixed Header */}
-            <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
-              <DialogTitle className="text-lg sm:text-xl font-semibold">
-                {getStepTitle()}
-              </DialogTitle>
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                {getStepDescription()}
-              </p>
-              {/* Progress Indicator */}
-              <div className="mt-3 sm:mt-4">
-                <ProgressIndicator
-                  currentStep={currentStep}
-                  totalSteps={steps.length}
-                  steps={steps}
-                />
-              </div>
-            </DialogHeader>
-            
-            {/* Scrollable Content */}
-            <div className="flex-1 overflow-hidden">
-              <MultiStepForm setIsStepValid={setIsStepValid} />
-              
-              {/* Error Display */}
-              {submissionError && (
-                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-                  <p className="text-sm text-red-600">{submissionError}</p>
-                </div>
-              )}
-            </div>
+  // Get payment amount for the service
+  const getPaymentAmount = () => {
+    const config = getPaymentConfig(formData.service || 'consultation');
+    return config ? formatAmount(config.amount) : '₹400';
+  };
 
-            {/* Fixed Footer */}
-            <div className="px-4 sm:px-6 py-3 sm:py-4 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
-              <div className="flex justify-between items-center">
-                <div className="text-xs sm:text-sm text-muted-foreground">
-                  Step {currentStep} of 4
+  // Handle close attempt with confirmation for step 4
+  const handleCloseAttempt = () => {
+    if (currentStep === 4 && !formData.paymentSuccess) {
+      setShowCloseConfirmation(true);
+    } else {
+      closeForm();
+    }
+  };
+
+  const handleConfirmClose = () => {
+    closeForm();
+    setShowCloseConfirmation(false);
+  };
+
+  const handleCancelClose = () => {
+    setShowCloseConfirmation(false);
+  };
+
+  // Handle pay advance
+  const handlePayAdvance = () => {
+    processPayment();
+  };
+
+  return (
+    <>
+      <AnimatePresence>
+        {isFormOpen && (
+          <Dialog open={isFormOpen} onOpenChange={handleCloseAttempt}>
+            <DialogContent className="w-[95vw] max-w-4xl h-[90svh] sm:h-[95dvh] max-h-[90svh] sm:max-h-[95dvh] flex flex-col p-0 mx-auto overflow-hidden touch-manipulation form-scroll-container">
+              {/* Fixed Header */}
+              <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
+                <DialogTitle className="text-lg sm:text-xl font-semibold">
+                  {getStepTitle()}
+                </DialogTitle>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  {getStepDescription()}
+                </p>
+                {/* Progress Indicator */}
+                <div className="mt-3 sm:mt-4">
+                  <ProgressIndicator
+                    currentStep={currentStep}
+                    totalSteps={steps.length}
+                    steps={steps}
+                  />
                 </div>
-                <div className="flex gap-2 sm:gap-3">
-                  {currentStep > 1 && currentStep < 4 && (
-                    <Button
-                      variant="outline"
-                      onClick={prevStep}
-                      size="sm"
-                      className="sm:text-base"
-                    >
-                      Back
-                    </Button>
-                  )}
-                  {currentStep === 3 ? (
-                    <Button
-                      onClick={submitForm}
-                      disabled={isSubmitting}
-                      size="sm"
-                      className="min-w-[100px] sm:min-w-[120px] sm:text-base"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Submitting...
-                        </>
-                      ) : (
-                        'Submit Ticket'
-                      )}
-                    </Button>
-                  ) : currentStep < 3 ? (
-                    <Button
-                      onClick={nextStep}
-                      size="sm"
-                      className="min-w-[100px] sm:min-w-[120px] sm:text-base"
-                      disabled={!isStepValid}
-                    >
-                      Continue
-                    </Button>
-                  ) : null}
+              </DialogHeader>
+              
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-hidden">
+                <MultiStepForm setIsStepValid={setIsStepValid} />
+                
+                {/* Error Display */}
+                {submissionError && (
+                  <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                    <p className="text-sm text-red-600">{submissionError}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Fixed Footer */}
+              <div className="px-4 sm:px-6 py-3 sm:py-4 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
+                <div className="flex justify-between items-center">
+                  <div className="text-xs sm:text-sm text-muted-foreground">
+                    Step {currentStep} of 4
+                  </div>
+                  <div className="flex gap-2 sm:gap-3">
+                    {currentStep > 1 && currentStep < 4 && (
+                      <Button
+                        variant="outline"
+                        onClick={prevStep}
+                        size="sm"
+                        className="sm:text-base"
+                      >
+                        Back
+                      </Button>
+                    )}
+                    {currentStep === 3 ? (
+                      <Button
+                        onClick={submitForm}
+                        disabled={isSubmitting}
+                        size="sm"
+                        className="min-w-[100px] sm:min-w-[120px] sm:text-base"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Submitting...
+                          </>
+                        ) : (
+                          'Submit Ticket'
+                        )}
+                      </Button>
+                    ) : currentStep === 4 && !formData.paymentSuccess ? (
+                      <Button
+                        onClick={handlePayAdvance}
+                        disabled={isProcessingPayment}
+                        size="sm"
+                        className="min-w-[140px] sm:min-w-[160px] sm:text-base"
+                      >
+                        <CreditCard className="w-4 h-4 mr-2" />
+                        {isProcessingPayment ? 'Processing...' : `Pay ${getPaymentAmount()} Advance`}
+                      </Button>
+                    ) : currentStep < 3 ? (
+                      <Button
+                        onClick={nextStep}
+                        size="sm"
+                        className="min-w-[100px] sm:min-w-[120px] sm:text-base"
+                        disabled={!isStepValid}
+                      >
+                        Continue
+                      </Button>
+                    ) : null}
+                  </div>
                 </div>
               </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
-    </AnimatePresence>
+            </DialogContent>
+          </Dialog>
+        )}
+      </AnimatePresence>
+
+      {/* Close Confirmation Dialog */}
+      <ConfirmDialog open={showCloseConfirmation} onOpenChange={setShowCloseConfirmation}>
+        <ConfirmDialogContent>
+          <ConfirmDialogHeader>
+            <ConfirmDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-orange-500" />
+              Wait! Don&apos;t miss out on priority support
+            </ConfirmDialogTitle>
+            <DialogDescription className="text-left">
+              <p className="mb-3">
+                By closing now, you&apos;ll miss out on:
+              </p>
+              <ul className="list-disc list-inside space-y-1 text-sm mb-4">
+                <li><strong>Priority support</strong> - Get faster response times</li>
+                <li><strong>Dedicated attention</strong> - Your case gets bumped to the top</li>
+                <li><strong>Peace of mind</strong> - Secure your spot in our queue</li>
+                <li><strong>Better outcomes</strong> - Early engagement leads to better results</li>
+              </ul>
+              <p className="text-sm">
+                Just <span className="font-semibold text-primary">{getPaymentAmount()}</span> secures your priority status. 
+                Your legal matter deserves the best possible start!
+              </p>
+            </DialogDescription>
+          </ConfirmDialogHeader>
+          <ConfirmDialogFooter>
+            <Button variant="outline" onClick={handleCancelClose}>
+              Stay & Pay Advance
+            </Button>
+            <Button onClick={handleConfirmClose} variant="secondary">
+              Close Anyway
+            </Button>
+          </ConfirmDialogFooter>
+        </ConfirmDialogContent>
+      </ConfirmDialog>
+    </>
   );
 };
 

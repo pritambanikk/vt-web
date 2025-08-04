@@ -36,6 +36,11 @@ export class PaymentService {
    */
   static loadRazorpayScript(): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (typeof window === 'undefined') {
+        reject(new Error('Window is not defined - running on server side'));
+        return;
+      }
+
       if (window.Razorpay) {
         resolve();
         return;
@@ -61,7 +66,7 @@ export class PaymentService {
   ): Promise<void> {
     try {
       // Load Razorpay script
-      await this.loadRazorpayScript();
+      await PaymentService.loadRazorpayScript();
 
       const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
       if (!keyId) {
@@ -79,7 +84,7 @@ export class PaymentService {
         handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
           try {
             // Verify payment on server
-            const verificationResult = await this.verifyPayment(response);
+            const verificationResult = await PaymentService.verifyPayment(response);
             if (verificationResult.success) {
               onSuccess(response);
             } else {
@@ -169,7 +174,7 @@ export class PaymentService {
     let lastError: PaymentVerificationResponse | null = null;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      const result = await this.verifyPayment(paymentResponse);
+      const result = await PaymentService.verifyPayment(paymentResponse);
       
       if (result.success) {
         return result;
@@ -197,7 +202,7 @@ export class PaymentService {
   }
 }
 
-// Export convenience functions
-export const initializePayment = PaymentService.initializePayment;
-export const verifyPayment = PaymentService.verifyPayment;
-export const verifyPaymentWithRetry = PaymentService.verifyPaymentWithRetry; 
+// Export convenience functions that properly reference the static methods
+export const initializePayment = PaymentService.initializePayment.bind(PaymentService);
+export const verifyPayment = PaymentService.verifyPayment.bind(PaymentService);
+export const verifyPaymentWithRetry = PaymentService.verifyPaymentWithRetry.bind(PaymentService); 

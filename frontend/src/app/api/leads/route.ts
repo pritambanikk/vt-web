@@ -15,19 +15,16 @@ interface LeadSubmissionResponse {
   message?: string;
 }
 
-// Function to generate custom ID: first4LettersOfName-last4DigitsOfPhone
+// Function to generate custom ID: firstName-last4DigitsOfPhone
 function generateCustomId(name: string, phoneNumber: string): string {
-  // Get first 4 letters of name (or less if name is shorter)
-  const namePart = name.replace(/\s+/g, '').toLowerCase().substring(0, 4);
+  // Get first name (everything before the first space)
+  const firstName = name.split(' ')[0].toLowerCase();
   
   // Get last 4 digits of phone number
   const phoneDigits = phoneNumber.replace(/\D/g, ''); // Remove non-digits
   const phonePart = phoneDigits.slice(-4);
   
-  // Generate a random 3-digit suffix to ensure uniqueness
-  const randomSuffix = Math.floor(Math.random() * 900) + 100; // 100-999
-  
-  return `${namePart}-${phonePart}-${randomSuffix}`;
+  return `${firstName}-${phonePart}`;
 }
 
 // Database insertion schema (matches the leads table structure)

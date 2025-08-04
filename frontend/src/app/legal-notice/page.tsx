@@ -4,6 +4,7 @@ import { LegalNoticeLanding } from "@/components/features/landing-pages/legal-no
 import { FAQSection } from "@/components/shared/faq-section";
 import { legalNoticeFAQs } from "@/data/faqs";
 import { generateServiceMetadata } from "@/lib/seo";
+import { TrustSignalsSection } from "@/components/features/homepage/trust-signals";
 
 export const metadata: Metadata = generateServiceMetadata('legal-notice');
 
@@ -20,6 +21,7 @@ export default function LegalNoticePage() {
         <Breadcrumb items={breadcrumbItems} />
       </div>
       <LegalNoticeLanding />
+      <TrustSignalsSection />
       <FAQSection 
         faqs={legalNoticeFAQs}
         title="Legal Notice FAQs"

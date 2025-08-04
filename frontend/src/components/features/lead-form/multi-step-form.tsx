@@ -20,7 +20,6 @@ export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
     formData,
     updateFormData,
     nextStep,
-    resetForm,
     goToStep,
   } = useFormContext();
 
@@ -88,7 +87,6 @@ export const MultiStepForm = ({ setIsStepValid }: MultiStepFormProps) => {
         return (
           <WhatsNextStep
             formData={formData}
-            onComplete={resetForm}
             leadId={formData.leadId as string}
             submissionSuccess={formData.submissionSuccess as boolean}
           />
