@@ -186,7 +186,7 @@ export default function TermsOfUsePage() {
                 </p>
                 <div className="space-y-2 text-muted-foreground">
                   <p>Email: support@vakiltech.in</p>
-                  <p>Phone: +91 98765 43210</p>
+                  <p>Phone: +91 7047683995</p>
                   <p>Helpdesk: Available through our platform</p>
                 </div>
               </AccordionContent>

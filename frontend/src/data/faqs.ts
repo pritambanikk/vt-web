@@ -3,7 +3,7 @@ import { FAQItem } from "@/components/shared/faq-section"
 // Homepage FAQs
 export const homepageFAQs: FAQItem[] = [
   {
-    question: "How does Vakil Tech's legal consultation process work?",
+    question: "How does vakiltech's legal consultation process work?",
     answer: "Our process is simple: 1) Book a free consultation through our platform, 2) Get matched with a qualified lawyer within 24 hours, 3) Have your consultation via video call or in-person, 4) Receive a detailed legal opinion and action plan. We handle everything from scheduling to follow-up."
   },
   {

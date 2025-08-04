@@ -10,7 +10,7 @@ export function PricingCards() {
   const pricingPlans = [
     {
       title: "Legal Notice",
-      price: "₹999",
+      price: "₹1,999",
       period: "per notice",
       description: "Professional legal notices for payment recovery and compliance",
       features: [
@@ -26,7 +26,7 @@ export function PricingCards() {
     },
     {
       title: "Legal Consultation",
-      price: "₹1,999",
+      price: "₹299",
       period: "per session",
       description: "Expert legal consultation for business decisions and strategy",
       features: [

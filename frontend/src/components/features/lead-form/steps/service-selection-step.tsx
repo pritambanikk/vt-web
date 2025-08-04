@@ -30,7 +30,7 @@ const services = [
     value: 'legal-notice',
     label: 'Legal Notice',
     description: 'Send legal notices to individuals or organizations',
-    price: '₹999',
+    price: '₹1,999',
     icon: FileText,
     features: ['Professional drafting', 'Legal compliance', 'Quick delivery']
   },
@@ -38,7 +38,7 @@ const services = [
     value: 'consultation',
     label: 'Legal Consultation',
     description: 'Get expert legal advice on your case',
-    price: '₹1,499',
+    price: '₹299',
     icon: MessageSquare,
     features: ['Expert guidance', 'Case analysis', 'Action plan']
   },
@@ -46,7 +46,7 @@ const services = [
     value: 'document-drafting',
     label: 'Document Drafting',
     description: 'Professional legal document preparation',
-    price: '₹2,499',
+    price: '₹2,999',
     icon: Edit3,
     features: ['Custom drafting', 'Legal review', 'Compliance check']
   },

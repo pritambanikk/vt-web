@@ -58,11 +58,11 @@ export function HeroSection() {
         {/* Stats Section */}
         <div className="flex flex-wrap justify-center gap-12 mt-12 pt-8 border-t border-border/50">
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-primary mb-1">150+</div>
-            <div className="text-sm text-muted-foreground font-medium">SMEs Served</div>
+            <div className="text-2xl md:text-3xl font-bold text-primary mb-1">15,000+</div>
+            <div className="text-sm text-muted-foreground font-medium">Clients Served</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-primary mb-1">₹50L+</div>
+            <div className="text-2xl md:text-3xl font-bold text-primary mb-1">₹2Cr+</div>
             <div className="text-sm text-muted-foreground font-medium">Legal Fees Saved</div>
           </div>
           <div className="text-center">

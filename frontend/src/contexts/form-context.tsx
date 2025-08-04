@@ -24,6 +24,7 @@ interface FormContextType {
   processPayment: () => Promise<void>;
   submissionError: string | null;
   paymentError: string | null;
+  paymentStatus: 'pending' | 'success' | 'failed' | null;
 }
 
 interface FormProviderProps {
@@ -43,6 +44,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'success' | 'failed' | null>(null);
 
   const updateFormData = useCallback((data: Partial<LeadFormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
@@ -64,6 +66,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
     setCurrentStep(1);
     setFormData({});
     setIsFormOpen(false);
+    setPaymentStatus(null);
   }, []);
 
   const openForm = useCallback((serviceType?: string) => {
@@ -79,9 +82,16 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
       setCurrentStep(1);
     }
     setIsFormOpen(true);
+    setPaymentStatus(null); // Reset payment status when opening form
   }, [formData.service]);
 
   const closeForm = useCallback(() => {
+    // Clean up any modal CSS classes
+    const formModal = document.querySelector('[role="dialog"]');
+    if (formModal) {
+      formModal.classList.remove('form-modal-during-payment', 'form-modal-after-payment');
+    }
+    
     setIsFormOpen(false);
     resetForm();
   }, [resetForm]);
@@ -148,6 +158,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
 
     setIsProcessingPayment(true);
     setPaymentError(null);
+    setPaymentStatus('pending'); // Set payment status to pending
 
     try {
       // Create payment request
@@ -159,6 +170,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
 
       if (!paymentRequest) {
         setPaymentError('Failed to create payment request');
+        setPaymentStatus('failed');
         return;
       }
 
@@ -173,6 +185,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
             paymentSuccess: true,
             paymentId: response.razorpay_payment_id
           });
+          setPaymentStatus('success');
           // Analytics: Advance paid
           logEvent('advance_paid', {
             service: formData.service,
@@ -184,11 +197,13 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
         },
         (error) => {
           setPaymentError(error);
+          setPaymentStatus('failed');
         }
       );
 
     } catch (err) {
       setPaymentError('Payment initialization failed. Please try again.');
+      setPaymentStatus('failed');
       console.error('Payment error:', err);
     } finally {
       setIsProcessingPayment(false);
@@ -213,7 +228,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children, initialSer
         submitForm,
         processPayment,
         submissionError,
-        paymentError
+        paymentError,
+        paymentStatus
       }}
     >
       {children}

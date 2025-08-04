@@ -104,7 +104,7 @@ export function ServicesOverviewSection() {
         
         <div className="text-center mt-12">
           <p className="text-muted-foreground text-sm mb-4">
-            All prices include GST. No hidden charges.
+            All prices are final. No hidden charges.
           </p>
           <Button 
             variant="outline" 

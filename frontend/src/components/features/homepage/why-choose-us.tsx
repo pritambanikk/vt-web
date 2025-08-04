@@ -8,12 +8,12 @@ export function WhyChooseUsSection() {
   const reasons = [
     {
       title: "Transparent Pricing",
-      description: "No hidden fees, no surprises. We show you exactly what you'll pay upfront - from ₹999 legal notices to comprehensive retainers.",
+      description: "No hidden fees, no surprises. We show you exactly what you'll pay upfront - from ₹1,999 legal notices to comprehensive retainers.",
       icon: "🔍"
     },
     {
       title: "Indian Legal Expertise",
-      description: "Our lawyers understand Indian business culture, local regulations, and speak your language - both Hindi and English.",
+      description: "Our lawyers understand Indian problems, local regulations, and speak your language- English and regional languages.",
       icon: "🇮🇳"
     },
     {
@@ -33,11 +33,11 @@ export function WhyChooseUsSection() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-            Why Indian Businesses Choose Vakil-Tech
+            Why Indians Choose vakiltech
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            We understand the unique challenges Indian businesses face and provide 
-            legal solutions that actually work in our market.
+            We understand the unique challenges that you face and provide 
+            legal solutions through out network of lawyers across India.
           </p>
         </div>
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
@@ -57,13 +57,13 @@ export function WhyChooseUsSection() {
         {/* Cultural Context Section */}
         <div className="bg-muted/30 rounded-lg p-8 mb-12 max-w-4xl mx-auto">
           <h3 className="text-2xl font-bold text-center mb-6 text-foreground">
-            Built for Indian Business Reality
+            Built for Indian Problems
           </h3>
           <div className="grid md:grid-cols-3 gap-6 text-center">
             <div>
               <div className="text-3xl mb-2">🏢</div>
-              <h4 className="font-semibold mb-2">SME Focused</h4>
-              <p className="text-sm text-muted-foreground">Solutions designed for small and medium businesses</p>
+              <h4 className="font-semibold mb-2">Individual Focused</h4>
+              <p className="text-sm text-muted-foreground">Solutions designed for individuals and businesses</p>
             </div>
             <div>
               <div className="text-3xl mb-2">💼</div>
@@ -84,7 +84,7 @@ export function WhyChooseUsSection() {
             Ready to Transform Your Legal Experience?
           </h3>
           <p className="text-lg text-muted-foreground mb-6">
-            Join 150+ Indian businesses who trust Vakil-Tech for their legal needs.
+            Join 15000+ Indians who trust vakiltech for their legal needs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 

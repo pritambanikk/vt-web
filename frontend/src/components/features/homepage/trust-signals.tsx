@@ -17,7 +17,7 @@ export function TrustSignalsSection() {
             Trusted by Indian Businesses
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            Join hundreds of Indian entrepreneurs who trust Vakil-Tech for their legal needs.
+          Join hundreds of Indian who trust vakiltech for all their legal needs. 
           </p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
@@ -41,8 +41,7 @@ export function TrustSignalsSection() {
         {/* Trust Badges */}
         <div className="text-center mt-12">
           <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-            <div className="text-sm font-semibold text-muted-foreground">Bar Council Registered</div>
-            <div className="text-sm font-semibold text-muted-foreground">ISO 27001 Certified</div>
+            <div className="text-sm font-semibold text-muted-foreground">Bar Council Registered Network Lawyers</div>
             <div className="text-sm font-semibold text-muted-foreground">Data Protection Compliant</div>
             <div className="text-sm font-semibold text-muted-foreground">24/7 Legal Support</div>
           </div>

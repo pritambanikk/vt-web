@@ -12,17 +12,17 @@ export function AboutCTA() {
         Ready to Work With Us?
       </h2>
       <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-        Join hundreds of Indian entrepreneurs who trust Vakil-Tech for their legal needs. 
-        Let&apos;s discuss how we can help your business grow.
+        Join hundreds of Indian who trust vakiltech for all their legal needs. 
+        Let&apos;s discuss how we can help you.
       </p>
       <div className="space-x-4">
-        <Button 
+        {/* <Button 
           size="lg" 
           className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
           onClick={() => openForm('consultation')}
         >
-          Get Free Consultation
-        </Button>
+          Join Network Lawyers
+        </Button> */}
         <Button 
           variant="outline" 
           size="lg" 

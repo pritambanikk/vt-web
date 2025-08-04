@@ -17,7 +17,7 @@ export default function AboutPage() {
     {
       icon: <Target className="h-8 w-8" />,
       title: "Results-Driven",
-      description: "We focus on outcomes that matter to your business success, not just legal processes."
+      description: "We focus on outcomes that matter to you; the vakiltech way."
     },
     {
       icon: <Shield className="h-8 w-8" />,
@@ -32,7 +32,7 @@ export default function AboutPage() {
     {
       icon: <Heart className="h-8 w-8" />,
       title: "Client-Centric",
-      description: "Your success is our priority. We understand Indian business culture and challenges."
+      description: "We truely understand your problems and your success is our priority."
     }
   ];
 
@@ -47,11 +47,11 @@ export default function AboutPage() {
         {/* Hero Section */}
         <section className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
-            About Vakil-Tech
+            About vakiltech
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             We&apos;re on a mission to make professional legal services accessible, affordable, 
-            and effective for Indian businesses. No more traditional law firm complexity.
+            and effective for individual and businesses in India. No more legal complexity.
           </p>
         </section>
 
@@ -87,20 +87,20 @@ export default function AboutPage() {
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div>
-                <div className="text-4xl font-bold text-primary mb-2">150+</div>
-                <div className="text-muted-foreground">SMEs Served</div>
+                <div className="text-4xl font-bold text-primary mb-2">15000+</div>
+                <div className="text-muted-foreground">Clients Served</div>
               </div>
               <div>
-                <div className="text-4xl font-bold text-primary mb-2">₹50L+</div>
+                <div className="text-4xl font-bold text-primary mb-2">₹2Cr+</div>
                 <div className="text-muted-foreground">Legal Fees Saved</div>
               </div>
               <div>
                 <div className="text-4xl font-bold text-primary mb-2">25+</div>
-                <div className="text-muted-foreground">Expert Lawyers</div>
+                <div className="text-muted-foreground">Cities Covered</div>
               </div>
               <div>
                 <div className="text-4xl font-bold text-primary mb-2">4.8/5</div>
-                <div className="text-muted-foreground">Customer Rating</div>
+                <div className="text-muted-foreground">Avg Customer Rating</div>
               </div>
             </div>
           </div>

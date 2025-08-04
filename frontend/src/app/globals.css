@@ -237,6 +237,40 @@
 /* Prevent body scroll when combobox is open */
 body.combobox-open {
   overflow: hidden;
-  position: fixed;
-  width: 100%;
+}
+
+/* Razorpay Modal Z-Index Fixes */
+.razorpay-container,
+.razorpay-checkout-frame,
+.razorpay-checkout-frame iframe,
+[data-razorpay],
+.razorpay-payment-button,
+.razorpay-checkout {
+  z-index: 9999 !important;
+  position: relative !important;
+}
+
+/* Ensure Razorpay modal overlays are above everything */
+.razorpay-overlay,
+.razorpay-modal,
+.razorpay-dialog {
+  z-index: 10000 !important;
+  position: fixed !important;
+}
+
+/* Fix for Razorpay payment modal interaction */
+.razorpay-checkout-frame {
+  z-index: 10001 !important;
+}
+
+/* Ensure our form modal doesn't interfere with Razorpay */
+.form-modal-during-payment {
+  z-index: 10 !important;
+  pointer-events: none !important;
+}
+
+/* Re-enable pointer events for our modal after payment */
+.form-modal-after-payment {
+  z-index: 50 !important;
+  pointer-events: auto !important;
 }

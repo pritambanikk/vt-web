@@ -26,6 +26,9 @@ export interface PaymentOptions {
   theme: {
     color: string;
   };
+  modal: {
+    ondismiss: () => void;
+  };
 }
 
 export class PaymentService {
@@ -73,6 +76,12 @@ export class PaymentService {
         throw new Error('Razorpay key not configured');
       }
 
+      // Add CSS class to our form modal to lower its z-index
+      const formModal = document.querySelector('[role="dialog"]');
+      if (formModal) {
+        formModal.classList.add('form-modal-during-payment');
+      }
+
       const options: PaymentOptions = {
         key: keyId,
         amount: paymentRequest.amount,
@@ -83,6 +92,12 @@ export class PaymentService {
         notes: paymentRequest.notes,
         handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
           try {
+            // Remove CSS class from our form modal
+            if (formModal) {
+              formModal.classList.remove('form-modal-during-payment');
+              formModal.classList.add('form-modal-after-payment');
+            }
+
             // Verify payment on server
             const verificationResult = await PaymentService.verifyPayment(response);
             if (verificationResult.success) {
@@ -91,6 +106,11 @@ export class PaymentService {
               onError(verificationResult.error || 'Payment verification failed');
             }
           } catch {
+            // Remove CSS class from our form modal on error too
+            if (formModal) {
+              formModal.classList.remove('form-modal-during-payment');
+              formModal.classList.add('form-modal-after-payment');
+            }
             onError('Payment verification failed');
           }
         },
@@ -101,12 +121,28 @@ export class PaymentService {
         theme: {
           color: '#2563eb', // Blue color matching the app theme
         },
+        modal: {
+          ondismiss: () => {
+            // Remove CSS class from our form modal when payment modal is dismissed
+            if (formModal) {
+              formModal.classList.remove('form-modal-during-payment');
+              formModal.classList.add('form-modal-after-payment');
+            }
+          }
+        }
       };
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
 
     } catch (error) {
+      // Remove CSS class from our form modal on error
+      const formModal = document.querySelector('[role="dialog"]');
+      if (formModal) {
+        formModal.classList.remove('form-modal-during-payment');
+        formModal.classList.add('form-modal-after-payment');
+      }
+
       console.error('Payment initialization error:', error);
       onError(error instanceof Error ? error.message : 'Payment initialization failed');
     }

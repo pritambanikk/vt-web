@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Facebook, Instagram, Linkedin, Moon, Send, Sun, Twitter } from "lucide-react"
+import { Facebook, Instagram, Linkedin, Moon, Send, Sun, Twitter, Mail } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -39,33 +39,10 @@ function Footerdemo() {
               <Image src="/logo.png" alt="Vakil Tech" width={120} height={120} className="dark:bg-white dark:p-2 dark:rounded-lg dark:shadow-md" />
             </div>
             <p className="mb-6 text-muted-foreground">
-              VakilTech connects legal professionals and clients, serving as a service aggregator to foster communication.
+              <b>vakiltech</b> connects legal professionals and clients, serving as a service aggregator to foster communication.
                We are not agents for lawyers; our role is to facilitate connections between lawyers and clients.
               You can <span className="text-primary cursor-pointer" onClick={() => router.push('/terms-of-use')}> read more here.</span>  
             </p>
-            <form className="relative" onSubmit={(e) => {
-              e.preventDefault();
-              const email = e.currentTarget.querySelector('input[type="email"]') as HTMLInputElement;
-              if (email && email.value) {
-                alert(`Thank you for subscribing! We'll send updates to ${email.value}`);
-                email.value = '';
-              }
-            }}>
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="pr-12 backdrop-blur-sm"
-                required
-              />
-              <Button
-                type="submit"
-                size="icon"
-                className="absolute right-1 top-1 h-8 w-8 rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105"
-              >
-                <Send className="h-4 w-4" />
-                <span className="sr-only">Subscribe</span>
-              </Button>
-            </form>
             <div className="absolute -right-4 top-0 h-24 w-24 rounded-full bg-primary/10 blur-2xl" />
           </div>
           <div>
@@ -91,9 +68,8 @@ function Footerdemo() {
           <div>
             <h3 className="mb-4 text-lg font-semibold">Contact Us</h3>
             <address className="space-y-2 text-sm not-italic">
-              <p>VakilTech Legal Services</p>
-              <p>Phone: +91 98765 43210</p>
-              <p>Email: contact@vakiltech.com</p>
+              <p>Phone: +91 7047683995</p>
+              <p>Email: help@vakiltech.in</p>
             </address>
           </div>
           <div className="relative">
@@ -124,14 +100,14 @@ function Footerdemo() {
                       variant="outline" 
                       size="icon" 
                       className="rounded-full"
-                      onClick={() => window.open('https://twitter.com/vakiltech', '_blank')}
+                      onClick={() => window.location.href = "mailto:contact@vakiltech.com"}
                     >
-                      <Twitter className="h-4 w-4" />
-                      <span className="sr-only">Twitter</span>
+                      <Mail className="h-4 w-4" />
+                      <span className="sr-only">Email</span>
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Follow us on Twitter</p>
+                    <p>Email us at help@vakiltech.in</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -142,7 +118,7 @@ function Footerdemo() {
                       variant="outline" 
                       size="icon" 
                       className="rounded-full"
-                      onClick={() => window.open('https://instagram.com/vakiltech', '_blank')}
+                      onClick={() => window.open('https://www.instagram.com/vakil.tech/', '_blank')}
                     >
                       <Instagram className="h-4 w-4" />
                       <span className="sr-only">Instagram</span>
@@ -160,7 +136,7 @@ function Footerdemo() {
                       variant="outline" 
                       size="icon" 
                       className="rounded-full"
-                      onClick={() => window.open('https://linkedin.com/company/vakiltech', '_blank')}
+                      onClick={() => window.open('https://www.linkedin.com/company/vakil-tech/', '_blank')}
                     >
                       <Linkedin className="h-4 w-4" />
                       <span className="sr-only">LinkedIn</span>
@@ -188,7 +164,7 @@ function Footerdemo() {
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-center md:flex-row">
           <p className="text-sm text-muted-foreground">
-            © 2024 VakilTech. All rights reserved.
+            © 2025 vakiltech All rights reserved.
           </p>
           <nav className="flex gap-4 text-sm">
             <a href="/privacy-policy" className="transition-colors hover:text-primary">

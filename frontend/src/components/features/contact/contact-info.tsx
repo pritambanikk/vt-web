@@ -12,13 +12,13 @@ export function ContactInfo() {
     {
       icon: <Phone className="h-6 w-6" />,
       title: "Phone",
-      details: ["+91 98765 43210", "+91 98765 43211"],
+      details: ["+91 7047683995"],
       action: "Call us"
     },
     {
       icon: <Mail className="h-6 w-6" />,
       title: "Email",
-      details: ["help@vakiltech.com", "support@vakiltech.com"],
+      details: ["help@vakiltech.com"],
       action: "Email us"
     },
   ];

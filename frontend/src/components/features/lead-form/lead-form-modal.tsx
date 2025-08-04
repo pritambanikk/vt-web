@@ -12,7 +12,7 @@ import { MultiStepForm } from './multi-step-form';
 import { ProgressIndicator } from './progress-indicator';
 import { useFormContext } from '@/contexts/form-context';
 import { Loader2, CreditCard, AlertTriangle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getPaymentConfig, formatAmount } from '@/lib/payment-config';
 import {
   Dialog as ConfirmDialog,
@@ -35,11 +35,40 @@ export const LeadFormModal = () => {
     submissionError,
     formData,
     processPayment,
-    isProcessingPayment
+    isProcessingPayment,
+    paymentStatus
   } = useFormContext();
 
   const [isStepValid, setIsStepValid] = useState(false);
   const [showCloseConfirmation, setShowCloseConfirmation] = useState(false);
+  const [modalZIndex, setModalZIndex] = useState(50);
+
+  // Manage z-index for payment modal compatibility
+  useEffect(() => {
+    if (isProcessingPayment) {
+      // Lower our modal's z-index to allow Razorpay modal to appear above
+      setModalZIndex(10);
+      
+      // Add a small delay to ensure Razorpay modal loads
+      const timer = setTimeout(() => {
+        // Force focus to any Razorpay elements that might be present
+        const razorpayElements = document.querySelectorAll('[data-razorpay]');
+        if (razorpayElements.length > 0) {
+          // Ensure Razorpay modal is interactive
+          document.body.style.overflow = 'hidden';
+        }
+      }, 100);
+
+      return () => {
+        clearTimeout(timer);
+        setModalZIndex(50);
+        document.body.style.overflow = '';
+      };
+    } else {
+      setModalZIndex(50);
+      document.body.style.overflow = '';
+    }
+  }, [isProcessingPayment]);
 
   const getStepTitle = () => {
     switch (currentStep) {
@@ -50,7 +79,13 @@ export const LeadFormModal = () => {
       case 3:
         return 'Review & Submit';
       case 4:
-        return "What's Next";
+        if (paymentStatus === 'success') {
+          return 'Payment Successful!';
+        } else if (paymentStatus === 'failed') {
+          return 'Payment Failed';
+        } else {
+          return "What's Next";
+        }
       default:
         return 'Get Legal Help';
     }
@@ -65,7 +100,13 @@ export const LeadFormModal = () => {
       case 3:
         return 'Review your information and submit your ticket';
       case 4:
-        return 'Your ticket is submitted! Next steps below.';
+        if (paymentStatus === 'success') {
+          return 'Your payment has been processed successfully!';
+        } else if (paymentStatus === 'failed') {
+          return 'Payment was not completed. You can try again or contact support.';
+        } else {
+          return 'Your ticket is submitted! Next steps below.';
+        }
       default:
         return '';
     }
@@ -86,6 +127,11 @@ export const LeadFormModal = () => {
 
   // Handle close attempt with confirmation for step 4
   const handleCloseAttempt = () => {
+    // Don't allow closing if payment was successful
+    if (paymentStatus === 'success') {
+      return;
+    }
+    
     if (currentStep === 4 && !formData.paymentSuccess) {
       setShowCloseConfirmation(true);
     } else {
@@ -107,12 +153,21 @@ export const LeadFormModal = () => {
     processPayment();
   };
 
+  // Handle retry payment
+  const handleRetryPayment = () => {
+    // Reset payment status and try again
+    processPayment();
+  };
+
   return (
     <>
       <AnimatePresence>
         {isFormOpen && (
           <Dialog open={isFormOpen} onOpenChange={handleCloseAttempt}>
-            <DialogContent className="w-[95vw] max-w-4xl h-[90svh] sm:h-[95dvh] max-h-[90svh] sm:max-h-[95dvh] flex flex-col p-0 mx-auto overflow-hidden touch-manipulation form-scroll-container">
+            <DialogContent 
+              className="w-[95vw] max-w-4xl h-[90svh] sm:h-[95dvh] max-h-[90svh] sm:max-h-[95dvh] flex flex-col p-0 mx-auto overflow-hidden touch-manipulation form-scroll-container"
+              style={{ zIndex: modalZIndex }}
+            >
               {/* Fixed Header */}
               <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
                 <DialogTitle className="text-lg sm:text-xl font-semibold">
@@ -176,15 +231,23 @@ export const LeadFormModal = () => {
                           'Submit Ticket'
                         )}
                       </Button>
-                    ) : currentStep === 4 && !formData.paymentSuccess ? (
+                    ) : currentStep === 4 && !formData.paymentSuccess && paymentStatus !== 'success' ? (
                       <Button
-                        onClick={handlePayAdvance}
+                        onClick={paymentStatus === 'failed' ? handleRetryPayment : handlePayAdvance}
                         disabled={isProcessingPayment}
                         size="sm"
                         className="min-w-[140px] sm:min-w-[160px] sm:text-base"
                       >
                         <CreditCard className="w-4 h-4 mr-2" />
-                        {isProcessingPayment ? 'Processing...' : `Pay ${getPaymentAmount()} Advance`}
+                        {isProcessingPayment ? 'Processing...' : paymentStatus === 'failed' ? 'Retry Payment' : `Pay ${getPaymentAmount()} Advance`}
+                      </Button>
+                    ) : currentStep === 4 && paymentStatus === 'success' ? (
+                      <Button
+                        onClick={closeForm}
+                        size="sm"
+                        className="min-w-[100px] sm:min-w-[120px] sm:text-base bg-green-600 hover:bg-green-700"
+                      >
+                        Close
                       </Button>
                     ) : currentStep < 3 ? (
                       <Button
@@ -232,6 +295,7 @@ export const LeadFormModal = () => {
             <Button variant="outline" onClick={handleCancelClose}>
               Stay & Pay Advance
             </Button>
+            <br />
             <Button onClick={handleConfirmClose} variant="secondary">
               Close Anyway
             </Button>

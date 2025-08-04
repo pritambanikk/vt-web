@@ -7,6 +7,7 @@ import { LeadFormModal } from "@/components/features/lead-form";
 import { useAnalytics } from '@/hooks/use-analytics';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 interface ClientLayoutProps {
   children: React.ReactNode;
@@ -35,6 +36,9 @@ export function ClientLayout({ children }: ClientLayoutProps) {
 
       {/* Lead Form Modal */}
       <LeadFormModal />
+
+      {/* Toast Notifications */}
+      <Toaster />
     </FormProvider>
   );
 } 
