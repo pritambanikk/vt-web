@@ -55,6 +55,7 @@ const leadInsertSchema = z.object({
   payment_status: z.literal('pending'),
   status: z.literal('new'),
   custom_id: z.string().min(1).max(50),
+  user_id: z.null().optional(),
 });
 
 export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmissionResponse>> {
@@ -81,11 +82,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmi
       payment_status: 'pending' as const,
       status: 'new' as const,
       custom_id: customId,
+      user_id: null, // Explicitly set to null for anonymous submissions
     };
 
     // Validate the transformed data
     const validatedLeadData = leadInsertSchema.parse(leadData);
 
+    // Debug: Log the data being inserted
+    console.log('Data being inserted:', JSON.stringify(validatedLeadData, null, 2));
+    
     // Insert into Supabase
     const { data, error } = await supabaseServer
       .from('leads')
@@ -95,11 +100,18 @@ export async function POST(request: NextRequest): Promise<NextResponse<LeadSubmi
 
     if (error) {
       console.error('Supabase insertion error:', error);
+      console.error('Error details:', {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint
+      });
       return NextResponse.json(
         {
           success: false,
           error: 'Failed to save lead to database',
-          message: 'Please try again or contact support if the problem persists.'
+          message: 'Please try again or contact support if the problem persists.',
+          details: error.message
         },
         { status: 500 }
       );
