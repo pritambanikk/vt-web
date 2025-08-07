@@ -52,7 +52,7 @@ function Footerdemo() {
               <a href="/corporate-retainer" className="block transition-colors hover:text-primary">
                 Corporate Retainer
               </a>
-              <a href="/legal-notice" className="block transition-colors hover:text-primary">
+              <a href="/send-a-legal-notice" className="block transition-colors hover:text-primary">
                 Legal Notice
               </a>
               <a href="/contact" className="block transition-colors hover:text-primary">

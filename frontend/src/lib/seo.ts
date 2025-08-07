@@ -30,7 +30,7 @@ export interface PageMetadata {
 }
 
 export interface ServicePageMetadata extends PageMetadata {
-  service: 'consultation' | 'document-drafting' | 'corporate-retainer' | 'legal-notice';
+  service: 'consultation' | 'document-drafting' | 'corporate-retainer' | 'send-a-legal-notice';
   pricing?: string;
   features?: string[];
 }
@@ -113,7 +113,7 @@ export function generateServiceMetadata(
       description: 'Comprehensive corporate legal retainer services for businesses. Ongoing legal support and consultation.',
       keywords: ['corporate legal', 'legal retainer', 'business legal', 'corporate law'],
     },
-    'legal-notice': {
+    'send-a-legal-notice': {
       title: 'Legal Notice Services',
       description: 'Professional legal notice drafting and filing services. Cease and desist, demand letters, and legal notices.',
       keywords: ['legal notices', 'cease and desist', 'demand letters', 'legal filing'],

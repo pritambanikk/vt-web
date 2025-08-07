@@ -6,7 +6,7 @@ import { legalNoticeFAQs } from "@/data/faqs";
 import { generateServiceMetadata } from "@/lib/seo";
 import { TrustSignalsSection } from "@/components/features/homepage/trust-signals";
 
-export const metadata: Metadata = generateServiceMetadata('legal-notice');
+export const metadata: Metadata = generateServiceMetadata('send-a-legal-notice');
 
 export default function LegalNoticePage() {
   const breadcrumbItems = [

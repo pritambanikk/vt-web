@@ -70,7 +70,7 @@ export function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-48">
               <DropdownMenuItem asChild>
-                <Link href="/legal-notice" className="cursor-pointer">
+                <Link href="/send-a-legal-notice" className="cursor-pointer">
                   Legal Notice
                 </Link>
               </DropdownMenuItem>
@@ -155,7 +155,7 @@ export function Header() {
                     Services
                   </div>
                   <Link
-                    href="/legal-notice"
+                    href="/send-a-legal-notice"
                     className="block text-left text-muted-foreground hover:text-primary transition-colors py-2 px-6 rounded-md hover:bg-accent"
                     onClick={handleMobileMenuClose}
                   >
